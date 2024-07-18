@@ -189,5 +189,3 @@ local.properties
 *.wpilog
 *.txt
 BuildConstants.java
-
-###
