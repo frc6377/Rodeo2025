@@ -4,25 +4,33 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveTrainConstants;
+import frc.robot.Constants.MotorIDs;
+import java.util.function.DoubleSupplier;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-  private final TalonSRX leftDriveMotor1 = new TalonSRX(0);
-  private final TalonSRX leftDriveMotor2 = new TalonSRX(1);
-  private final TalonSRX rightDriveMotor1 = new TalonSRX(2);
-  private final TalonSRX rightDriveMotor2 = new TalonSRX(3);
+  private final TalonSRX leftDriveMotor1;
+  private final TalonSRX leftDriveMotor2;
+  private final TalonSRX rightDriveMotor1;
+  private final TalonSRX rightDriveMotor2;
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
-    leftDriveMotor2.follow(leftDriveMotor1);
-    rightDriveMotor2.follow(rightDriveMotor1);
+    leftDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
 
+    leftDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    leftDriveMotor2.follow(leftDriveMotor1);
+
+    rightDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
     rightDriveMotor1.setInverted(true);
+
+    rightDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    rightDriveMotor2.follow(rightDriveMotor1);
     rightDriveMotor2.setInverted(true);
   }
 
@@ -36,14 +44,21 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
         () -> {
-          // Max input 0.5, Add axis for turing and driving at the same time
+          double leftPercent =
+              (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent)
+                  + (rightX.getAsDouble() * DriveTrainConstants.maxTurnPercent);
+          double rightPercent =
+              (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent)
+                  + (-rightX.getAsDouble() * DriveTrainConstants.maxDrivePercent);
 
-          leftDriveMotor1.set(ControlMode.PercentOutput, leftY.getAsDouble());
-          rightDriveMotor1.set(ControlMode.PercentOutput, leftY.getAsDouble());
-
-          leftDriveMotor1.set(ControlMode.PercentOutput, rightX.getAsDouble());
-          rightDriveMotor1.set(ControlMode.PercentOutput, rightX.getAsDouble());
+          leftDriveMotor1.set(ControlMode.PercentOutput, leftPercent);
+          rightDriveMotor1.set(ControlMode.PercentOutput, rightPercent);
         });
+  }
+
+  // Auto Paths
+  public Command autoDriveForwardCommand() {
+    return Commands.deadline(Commands.waitSeconds(2), driveCommand(() -> 0.5, () -> 0));
   }
 
   /**

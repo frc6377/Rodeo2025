@@ -11,7 +11,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 public final class Autos {
   /** Example static factory for an autonomous command. */
   public static Command exampleAuto(DriveTrainSubsystem subsystem) {
-    return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
+    return Commands.sequence(subsystem.autoDriveForwardCommand());
   }
 
   private Autos() {

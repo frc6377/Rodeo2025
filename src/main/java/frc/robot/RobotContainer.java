@@ -11,6 +11,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.TestSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,6 +22,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem m_DriveTrainSubsystem = new DriveTrainSubsystem();
+  private final TestSubsystem m_TestSubsystem = new TestSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -29,7 +31,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    m_DriveTrainSubsystem.setDefaultCommand(m_DriveTrainSubsystem.driveCommand(m_driverController::getLeftY, m_driverController::getRightX));
+    m_DriveTrainSubsystem.setDefaultCommand(
+        m_DriveTrainSubsystem.driveCommand(
+            m_driverController::getLeftY, m_driverController::getRightX));
 
     configureBindings();
   }
@@ -51,6 +55,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_DriveTrainSubsystem.exampleMethodCommand());
+
+    m_driverController.a().whileTrue(m_TestSubsystem.runMotorCommand1());
   }
 
   /**

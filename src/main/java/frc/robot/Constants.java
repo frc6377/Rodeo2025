@@ -13,8 +13,22 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class MotorIDs {
+    public static final int leftDriveMotor1 = 0;
+    public static final int leftDriveMotor2 = 1;
+    public static final int rightDriveMotor1 = 2;
+    public static final int rightDriveMotor2 = 3;
+
+    public static final int testMotor1 = 4;
+    public static final int testMotor2 = 5;
+    public static final int testMotor3 = 6;
+    public static final int testMotor4 = 7;
+  }
+
   public static class DriveTrainConstants {
-    
+    // Sum of these value should be <= 1 (can be over, would not cause problems)
+    public static final double maxDrivePercent = 0.5;
+    public static final double maxTurnPercent = 0.5;
   }
 
   public static class OperatorConstants {
