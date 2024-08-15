@@ -19,10 +19,13 @@ public final class Constants {
     public static final int rightDriveMotor1 = 2;
     public static final int rightDriveMotor2 = 3;
 
-    public static final int testMotor1 = 4;
-    public static final int testMotor2 = 5;
-    public static final int testMotor3 = 6;
-    public static final int testMotor4 = 7;
+    public static final int effectorMotor1 = 4;
+    public static final int effectorMotor2 = 5;
+
+    public static final int testMotor1 = 6;
+    public static final int testMotor2 = 7;
+    public static final int testMotor3 = 8;
+    public static final int testMotor4 = 9;
   }
 
   public static class DriveTrainConstants {
@@ -31,8 +34,14 @@ public final class Constants {
     public static final double maxTurnPercent = 0.5;
   }
 
+  public static class EffectorConstants {
+    public static final double intakePercent = 0.25;
+    public static final double outakePercent = 0.25;
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
+    public static final int kStreamDeckPort = 2;
   }
 }
