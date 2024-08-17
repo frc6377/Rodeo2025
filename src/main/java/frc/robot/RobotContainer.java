@@ -4,13 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.EffectorSubsystem;
+import frc.robot.subsystems.TestSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,15 +22,24 @@ import frc.robot.subsystems.ExampleSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final DriveTrainSubsystem m_DriveTrainSubsystem = new DriveTrainSubsystem();
+  private final EffectorSubsystem m_EffectorSubsystem = new EffectorSubsystem();
+  private final TestSubsystem m_TestSubsystem = new TestSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+  private final Joystick m_streamDeck = new Joystick(OperatorConstants.kStreamDeckPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    m_DriveTrainSubsystem.setDefaultCommand(
+        m_DriveTrainSubsystem.driveCommand(
+            m_driverController::getLeftY, m_driverController::getRightX));
+
     configureBindings();
   }
 
@@ -43,12 +54,21 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(m_DriveTrainSubsystem::exampleCondition)
+    //     .onTrue(new ExampleCommand(m_DriveTrainSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // Driver Controls
+    m_driverController.a().whileTrue(m_TestSubsystem.runMotorCommand1());
+
+    // Operator Controls
+    m_operatorController
+        .povUp()
+        .whileTrue(m_EffectorSubsystem.intakeCommand())
+        .onFalse(m_EffectorSubsystem.stopCommand());
+    m_operatorController
+        .povDown()
+        .whileTrue(m_EffectorSubsystem.outakeCommand())
+        .onFalse(m_EffectorSubsystem.stopCommand());
   }
 
   /**
@@ -58,6 +78,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return Autos.exampleAuto(m_DriveTrainSubsystem);
   }
 }
