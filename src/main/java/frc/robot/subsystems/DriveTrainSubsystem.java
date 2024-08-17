@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,22 +14,22 @@ import frc.robot.Constants.MotorIDs;
 import java.util.function.DoubleSupplier;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-  private final TalonSRX leftDriveMotor1;
-  private final TalonSRX leftDriveMotor2;
-  private final TalonSRX rightDriveMotor1;
-  private final TalonSRX rightDriveMotor2;
+  private final VictorSPX leftDriveMotor1;
+  private final VictorSPX leftDriveMotor2;
+  private final VictorSPX rightDriveMotor1;
+  private final VictorSPX rightDriveMotor2;
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
-    leftDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    leftDriveMotor1 = new VictorSPX(MotorIDs.leftDriveMotor1);
 
-    leftDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    leftDriveMotor2 = new VictorSPX(MotorIDs.leftDriveMotor1);
     leftDriveMotor2.follow(leftDriveMotor1);
 
-    rightDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    rightDriveMotor1 = new VictorSPX(MotorIDs.leftDriveMotor1);
     rightDriveMotor1.setInverted(true);
 
-    rightDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    rightDriveMotor2 = new VictorSPX(MotorIDs.leftDriveMotor1);
     rightDriveMotor2.follow(rightDriveMotor1);
     rightDriveMotor2.setInverted(true);
   }
