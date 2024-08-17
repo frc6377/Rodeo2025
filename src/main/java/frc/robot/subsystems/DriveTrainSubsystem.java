@@ -23,13 +23,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public DriveTrainSubsystem() {
     leftDriveMotor1 = new VictorSPX(MotorIDs.leftDriveMotor1);
 
-    leftDriveMotor2 = new VictorSPX(MotorIDs.leftDriveMotor1);
+    leftDriveMotor2 = new VictorSPX(MotorIDs.leftDriveMotor2);
     leftDriveMotor2.follow(leftDriveMotor1);
 
-    rightDriveMotor1 = new VictorSPX(MotorIDs.leftDriveMotor1);
+    rightDriveMotor1 = new VictorSPX(MotorIDs.rightDriveMotor1);
     rightDriveMotor1.setInverted(true);
 
-    rightDriveMotor2 = new VictorSPX(MotorIDs.leftDriveMotor1);
+    rightDriveMotor2 = new VictorSPX(MotorIDs.rightDriveMotor2);
     rightDriveMotor2.follow(rightDriveMotor1);
     rightDriveMotor2.setInverted(true);
   }

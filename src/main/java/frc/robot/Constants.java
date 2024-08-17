@@ -14,9 +14,9 @@ package frc.robot;
  */
 public final class Constants {
   public static class MotorIDs {
-    public static final int leftDriveMotor1 = 0;
+    public static final int leftDriveMotor1 = 2;
     public static final int leftDriveMotor2 = 1;
-    public static final int rightDriveMotor1 = 2;
+    public static final int rightDriveMotor1 = 4;
     public static final int rightDriveMotor2 = 3;
 
     public static final int effectorMotor1 = 4;
