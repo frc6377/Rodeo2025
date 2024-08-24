@@ -57,8 +57,34 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   // Auto Paths
-  public Command autoDriveForwardCommand() {
-    return Commands.deadline(Commands.waitSeconds(2), driveCommand(() -> 0.5, () -> 0));
+  public Command setLeftPercent(double percent) {
+    return run(
+        () -> {
+          leftDriveMotor1.set(ControlMode.PercentOutput, percent);
+        });
+  }
+
+  public Command setRightPercent(double percent) {
+    return run(
+        () -> {
+          rightDriveMotor1.set(ControlMode.PercentOutput, percent);
+        });
+  }
+
+  public Command setForward(double percent) {
+    return run(
+        () -> {
+          leftDriveMotor1.set(ControlMode.PercentOutput, percent);
+          rightDriveMotor1.set(ControlMode.PercentOutput, percent);
+        });
+  }
+
+  // public Command turnLeft(double deg) {
+
+  // }
+
+  public Command autoDriveForwardCommand(double seconds) {
+    return Commands.deadline(Commands.waitSeconds(seconds), driveCommand(() -> 1, () -> 0));
   }
 
   /**

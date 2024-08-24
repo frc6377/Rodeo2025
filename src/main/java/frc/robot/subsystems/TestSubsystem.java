@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,12 +19,16 @@ public class TestSubsystem extends SubsystemBase {
   private final TalonSRX testMotor3;
   private final TalonSRX testMotor4;
 
+  private final Pigeon2 testPigeon2;
+
   /** Creates a new TestSubsystem. */
   public TestSubsystem() {
     testMotor1 = new TalonSRX(MotorIDs.testMotor1);
     testMotor2 = new TalonSRX(MotorIDs.testMotor2);
     testMotor3 = new TalonSRX(MotorIDs.testMotor3);
     testMotor4 = new TalonSRX(MotorIDs.testMotor4);
+
+    testPigeon2 = new Pigeon2(1);
   }
 
   // Function
@@ -72,6 +78,18 @@ public class TestSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Test Pigeon2 getAngle()", testPigeon2.getAngle());
+    SmartDashboard.putNumber(
+        "Test Pidgeon2 getAccumGyroX()", testPigeon2.getAccumGyroX().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Test Pidgeon2 getAccumGyroY()", testPigeon2.getAccumGyroY().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Test Pidgeon2 getAccumGyroZ()", testPigeon2.getAccumGyroZ().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Test Pidgeon2 getAccelerationX()", testPigeon2.getAccelerationX().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Test Pidgeon2 getAccelerationY()", testPigeon2.getAccelerationY().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Test Pidgeon2 getAccelerationZ()", testPigeon2.getAccelerationZ().getValueAsDouble());
   }
 }
