@@ -14,20 +14,17 @@ public class Drivetrain extends SubsystemBase {
   private final TalonSRX m_BackRightMotor = new TalonSRX(3);
 
   public Drivetrain() {
-    m_frontRightMotor.setInverted(true);
     m_BackRightMotor.follow(m_frontRightMotor);
     m_BackLeftMotor.follow(m_frontLeftMotor);
+    m_frontLeftMotor.setInverted(true);
+    m_BackLeftMotor.setInverted(true);
   }
 
-  public Command driveCommand(DoubleSupplier leftY, DoubleSupplier rightX) {
+  public Command driveCommand(DoubleSupplier leftY, DoubleSupplier rightY) {
     return run(
         () -> {
-          double leftPercent =
-              (leftY.getAsDouble() * DrivetrainConstants.maxDrivePercent)
-                  + (rightX.getAsDouble() * DrivetrainConstants.maxTurningPercent);
-          double rightPercent =
-              (leftY.getAsDouble() * DrivetrainConstants.maxDrivePercent)
-                  + (-rightX.getAsDouble() * DrivetrainConstants.maxDrivePercent);
+          double leftPercent = (leftY.getAsDouble() * DrivetrainConstants.maxDrivePercent);
+          double rightPercent = (rightY.getAsDouble() * DrivetrainConstants.maxDrivePercent);
 
           m_frontLeftMotor.set(ControlMode.PercentOutput, leftPercent);
           m_frontRightMotor.set(ControlMode.PercentOutput, rightPercent);

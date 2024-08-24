@@ -19,6 +19,5 @@ public final class Constants {
 
   public static class DrivetrainConstants {
     public static final double maxDrivePercent = 0.5;
-    public static final double maxTurningPercent = 0.5;
   }
 }
