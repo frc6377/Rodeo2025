@@ -19,19 +19,23 @@ public final class Constants {
     public static final int rightDriveMotor1 = 4;
     public static final int rightDriveMotor2 = 3;
 
-    public static final int effectorMotor1 = 4;
-    public static final int effectorMotor2 = 5;
+    public static final int Pigeon2ID = 5;
 
-    public static final int testMotor1 = 6;
-    public static final int testMotor2 = 7;
-    public static final int testMotor3 = 8;
-    public static final int testMotor4 = 9;
+    public static final int effectorMotor1 = 6;
+    public static final int effectorMotor2 = 7;
+
+    public static final int testMotor1 = 8;
+    public static final int testMotor2 = 9;
+    public static final int testMotor3 = 10;
+    public static final int testMotor4 = 11;
   }
 
   public static class DriveTrainConstants {
     // Sum of these value should be <= 1 (can be over, would not cause problems)
     public static final double maxDrivePercent = 0.5;
     public static final double maxTurnPercent = 0.5;
+
+    public static final double angleTollerance = 0.25;
   }
 
   public static class EffectorConstants {

@@ -6,9 +6,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.MotorIDs;
 import java.util.function.DoubleSupplier;
@@ -18,6 +19,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private final VictorSPX leftDriveMotor2;
   private final VictorSPX rightDriveMotor1;
   private final VictorSPX rightDriveMotor2;
+
+  private final Pigeon2 drivePigeon2;
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
@@ -32,6 +35,17 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveMotor2 = new VictorSPX(MotorIDs.rightDriveMotor2);
     rightDriveMotor2.follow(rightDriveMotor1);
     rightDriveMotor2.setInverted(true);
+
+    drivePigeon2 = new Pigeon2(MotorIDs.Pigeon2ID);
+  }
+
+  public Trigger isGyroInRange(double target) {
+    return new Trigger(
+        () ->
+            (target - DriveTrainConstants.angleTollerance
+                    < drivePigeon2.getAccumGyroY().getValueAsDouble())
+                && (drivePigeon2.getAccumGyroY().getValueAsDouble()
+                    < target + DriveTrainConstants.angleTollerance));
   }
 
   /**
@@ -79,12 +93,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
         });
   }
 
-  // public Command turnLeft(double deg) {
-
-  // }
-
-  public Command autoDriveForwardCommand(double seconds) {
-    return Commands.deadline(Commands.waitSeconds(seconds), driveCommand(() -> 1, () -> 0));
+  public Command turnLeft(double deg) {
+    double tollerance = 1;
+    return run(() -> {
+          leftDriveMotor1.set(ControlMode.PercentOutput, 0.25);
+          rightDriveMotor1.set(ControlMode.PercentOutput, -0.25);
+        })
+        .onlyWhile(isGyroInRange(deg).negate());
   }
 
   /**
