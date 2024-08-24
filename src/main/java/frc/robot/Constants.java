@@ -16,4 +16,16 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class MotorIDs {
+    public static final int leftDriveMotor1 = 9;
+    public static final int leftDriveMotor2 = 19;
+    public static final int rightDriveMotor1 = 4;
+    public static final int rightDriveMotor2 = 10;
+  }
+  public static class DriveTrainConstants {
+    public static final double maxDrivePercent = 100;
+    public static final double maxTurnPercent = 100;
+
+  }
 }

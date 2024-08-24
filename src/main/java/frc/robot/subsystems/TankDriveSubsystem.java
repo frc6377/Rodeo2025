@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.MotorIDs;
@@ -23,13 +22,13 @@ public class TankDriveSubsystem extends SubsystemBase {
   public TankDriveSubsystem() {
     leftDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
 
-    leftDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    leftDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor2);
     leftDriveMotor2.follow(leftDriveMotor1);
 
-    rightDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    rightDriveMotor1 = new TalonSRX(MotorIDs.rightDriveMotor1);
     rightDriveMotor1.setInverted(true);
 
-    rightDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    rightDriveMotor2 = new TalonSRX(MotorIDs.rightDriveMotor2);
     rightDriveMotor2.follow(rightDriveMotor1);
     rightDriveMotor2.setInverted(true);
   }
@@ -45,10 +44,14 @@ public class TankDriveSubsystem extends SubsystemBase {
     return run(
         () -> {
           double leftPercent =
-              (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent) + (rightX.getAsDouble() * DriveTrainConstants.maxTurnPercent);
+              (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent)
+                  + (rightX.getAsDouble() * DriveTrainConstants.maxTurnPercent);
 
           double rightPercent =
-              (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent) + (-rightX.getAsDouble() * DriveTrainConstants.maxDrivePercent);
+              (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent)
+                  + (-rightX.getAsDouble() * DriveTrainConstants.maxDrivePercent);
+
+          System.out.println("percentage" + leftPercent + rightPercent);
 
           leftDriveMotor1.set(ControlMode.PercentOutput, leftPercent);
           rightDriveMotor1.set(ControlMode.PercentOutput, rightPercent);
