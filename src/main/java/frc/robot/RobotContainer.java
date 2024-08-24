@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.TankDriveSubsystem;
 
 /**
@@ -41,9 +39,8 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  
   private void configureBindings() {
-    /* 
+    /*
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
@@ -53,7 +50,8 @@ public class RobotContainer {
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     */
     m_TankDriveSubsystem.setDefaultCommand(
-    m_TankDriveSubsystem.driveCommand(m_driverController::getLeftY, m_driverController::getRightY));
+        m_TankDriveSubsystem.driveCommand(
+            m_driverController::getLeftY, m_driverController::getRightY));
   }
 
   /**
@@ -63,7 +61,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //return Autos.exampleAuto(m_exampleSubsystem);
+    // return Autos.exampleAuto(m_exampleSubsystem);
     return null;
   }
 }
