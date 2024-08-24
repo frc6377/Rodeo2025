@@ -12,14 +12,14 @@ import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.MotorIDs;
 import java.util.function.DoubleSupplier;
 
-public class TankDriveSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase {
   private final TalonSRX leftDriveMotor1;
   private final TalonSRX leftDriveMotor2;
   private final TalonSRX rightDriveMotor1;
   private final TalonSRX rightDriveMotor2;
 
   /** Creates a new ExampleSubsystem. */
-  public TankDriveSubsystem() {
+  public DriveSubsystem() {
     leftDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
 
     leftDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor2);
@@ -38,7 +38,7 @@ public class TankDriveSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public Command driveCommand(DoubleSupplier leftY, DoubleSupplier rightX) {
+  public Command arcadeCommand(DoubleSupplier leftY, DoubleSupplier rightX) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
@@ -51,10 +51,22 @@ public class TankDriveSubsystem extends SubsystemBase {
               (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent)
                   + (-rightX.getAsDouble() * DriveTrainConstants.maxDrivePercent);
 
-          System.out.println("percentage" + leftPercent + rightPercent);
-
           leftDriveMotor1.set(ControlMode.PercentOutput, leftPercent);
           rightDriveMotor1.set(ControlMode.PercentOutput, rightPercent);
+        });
+  }
+
+  public Command tankCommand(DoubleSupplier leftY, DoubleSupplier rightY) {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return run(
+        () -> {
+          double leftPercent = (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent);
+
+          double rightPercent = (rightY.getAsDouble() * DriveTrainConstants.maxDrivePercent);
+
+          leftDriveMotor1.set(ControlMode.PercentOutput, -leftPercent);
+          rightDriveMotor1.set(ControlMode.PercentOutput, -rightPercent);
         });
   }
 

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.TankDriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,7 +18,7 @@ import frc.robot.subsystems.TankDriveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final TankDriveSubsystem m_TankDriveSubsystem = new TankDriveSubsystem();
+  private final DriveSubsystem m_DriveSubsystem = new DriveSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -49,9 +49,13 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     */
-    m_TankDriveSubsystem.setDefaultCommand(
-        m_TankDriveSubsystem.driveCommand(
-            m_driverController::getLeftY, m_driverController::getRightY));
+    /*
+    m_DriveSubsystem.setDefaultCommand(
+        m_DriveSubsystem.arcadeCommand(
+            m_driverController::getLeftY, m_driverController::getRightX));
+    */
+    m_DriveSubsystem.setDefaultCommand(
+        m_DriveSubsystem.tankCommand(m_driverController::getLeftY, m_driverController::getRightY));
   }
 
   /**
