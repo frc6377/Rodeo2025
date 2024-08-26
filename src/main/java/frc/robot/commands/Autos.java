@@ -17,10 +17,11 @@ public final class Autos {
       ArmSubsystem armSubsystem,
       EffectorSubsystem effectorSubsystem) {
     return Commands.sequence(
-        driveSubsystem.setForwardCommand(3, 0.5),
-        armSubsystem.scoreHighCommand(),
-        effectorSubsystem.outakeCommand(),
-        driveSubsystem.setForwardCommand(3, -0.5));
+            driveSubsystem.setForwardCommand(3, 0.5),
+            armSubsystem.scoreHighCommand(),
+            effectorSubsystem.outakeCommand(),
+            driveSubsystem.setForwardCommand(3, -0.5))
+        .withName("OneBeackerAuto");
   }
 
   private Autos() {

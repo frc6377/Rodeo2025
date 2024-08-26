@@ -67,9 +67,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_DriveTrainSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_DriveTrainSubsystem));
 
     // Driver Controls
 
