@@ -5,14 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.EffectorSubsystem;
-import frc.robot.subsystems.TestSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,10 +24,13 @@ import frc.robot.subsystems.TestSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  private final SendableChooser<Command> autoChooser;
+  private ShuffleboardTab configTab = Shuffleboard.getTab("Config");
+
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem m_DriveTrainSubsystem = new DriveTrainSubsystem();
+  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
   private final EffectorSubsystem m_EffectorSubsystem = new EffectorSubsystem();
-  private final TestSubsystem m_TestSubsystem = new TestSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -39,6 +45,14 @@ public class RobotContainer {
     m_DriveTrainSubsystem.setDefaultCommand(
         m_DriveTrainSubsystem.driveCommand(
             m_driverController::getLeftY, m_driverController::getRightX));
+
+    autoChooser = new SendableChooser<Command>();
+
+    Command auto1 =
+        Autos.OneBeackerAuto(m_DriveTrainSubsystem, m_ArmSubsystem, m_EffectorSubsystem);
+    autoChooser.addOption(auto1.getName(), auto1);
+
+    configTab.add("Auton Selection", autoChooser);
 
     configureBindings();
   }
@@ -58,7 +72,6 @@ public class RobotContainer {
     //     .onTrue(new ExampleCommand(m_DriveTrainSubsystem));
 
     // Driver Controls
-    m_driverController.a().whileTrue(m_TestSubsystem.runMotorCommand1());
 
     // Operator Controls
     m_operatorController
@@ -78,6 +91,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_DriveTrainSubsystem);
+    return autoChooser.getSelected();
   }
 }

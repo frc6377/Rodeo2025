@@ -6,12 +6,21 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.EffectorSubsystem;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static Command exampleAuto(DriveTrainSubsystem subsystem) {
-    return Commands.sequence(subsystem.setLeftPercent(0.5), subsystem.setRightPercent(0.5));
+  public static Command OneBeackerAuto(
+      DriveTrainSubsystem driveSubsystem,
+      ArmSubsystem armSubsystem,
+      EffectorSubsystem effectorSubsystem) {
+    return Commands.sequence(
+        driveSubsystem.setForwardCommand(3, 0.5),
+        armSubsystem.scoreHighCommand(),
+        effectorSubsystem.outakeCommand(),
+        driveSubsystem.setForwardCommand(3, -0.5));
   }
 
   private Autos() {

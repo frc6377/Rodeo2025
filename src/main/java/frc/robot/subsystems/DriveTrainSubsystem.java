@@ -7,7 +7,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveTrainConstants;
@@ -48,11 +50,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
                     < target + DriveTrainConstants.angleTollerance));
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
+  public void setLeftPercent(double percent) {
+    leftDriveMotor1.set(ControlMode.PercentOutput, percent);
+  }
+
+  public void setRightPercent(double percent) {
+    rightDriveMotor1.set(ControlMode.PercentOutput, percent);
+  }
+
   public Command driveCommand(DoubleSupplier leftY, DoubleSupplier rightX) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
@@ -70,34 +75,29 @@ public class DriveTrainSubsystem extends SubsystemBase {
         });
   }
 
-  // Auto Paths
-  public Command setLeftPercent(double percent) {
-    return run(
-        () -> {
-          leftDriveMotor1.set(ControlMode.PercentOutput, percent);
-        });
+  // Auto Functions
+  public Command setForwardCommand(double sec, double percent) {
+    return Commands.deadline(
+        Commands.waitSeconds(sec),
+        run(
+            () -> {
+              setLeftPercent(percent);
+              setRightPercent(percent);
+            }));
   }
 
-  public Command setRightPercent(double percent) {
-    return run(
-        () -> {
-          rightDriveMotor1.set(ControlMode.PercentOutput, percent);
-        });
-  }
-
-  public Command setForward(double percent) {
-    return run(
-        () -> {
-          leftDriveMotor1.set(ControlMode.PercentOutput, percent);
-          rightDriveMotor1.set(ControlMode.PercentOutput, percent);
-        });
-  }
-
-  public Command turnLeft(double deg) {
-    double tollerance = 1;
+  public Command turnLeftCommand(double deg, double percent) {
     return run(() -> {
-          leftDriveMotor1.set(ControlMode.PercentOutput, 0.25);
-          rightDriveMotor1.set(ControlMode.PercentOutput, -0.25);
+          setLeftPercent(-percent);
+          setRightPercent(percent);
+        })
+        .onlyWhile(isGyroInRange(deg).negate());
+  }
+
+  public Command turnRightCommand(double deg, double percent) {
+    return run(() -> {
+          setLeftPercent(percent);
+          setRightPercent(-percent);
         })
         .onlyWhile(isGyroInRange(deg).negate());
   }
@@ -114,6 +114,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Drive Left Motor 1", leftDriveMotor1.getMotorOutputPercent());
+    SmartDashboard.putNumber("Drive Left Motor 2", leftDriveMotor2.getMotorOutputPercent());
+    SmartDashboard.putNumber("Drive Right Motor 1", rightDriveMotor1.getMotorOutputPercent());
+    SmartDashboard.putNumber("Drive Right Motor 2", rightDriveMotor2.getMotorOutputPercent());
+
     // This method will be called once per scheduler run
   }
 

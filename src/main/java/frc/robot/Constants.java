@@ -21,13 +21,11 @@ public final class Constants {
 
     public static final int Pigeon2ID = 5;
 
+    public static final int armMotor1 = 6;
+    public static final int armMotor2 = 7;
+
     public static final int effectorMotor1 = 6;
     public static final int effectorMotor2 = 7;
-
-    public static final int testMotor1 = 8;
-    public static final int testMotor2 = 9;
-    public static final int testMotor3 = 10;
-    public static final int testMotor4 = 11;
   }
 
   public static class DriveTrainConstants {
@@ -35,7 +33,12 @@ public final class Constants {
     public static final double maxDrivePercent = 0.5;
     public static final double maxTurnPercent = 0.5;
 
-    public static final double angleTollerance = 0.25;
+    public static final double angleTollerance = 1.0;
+  }
+
+  public static class ArmConstants {
+    public static final double lowScorePose = 0;
+    public static final double highScorePose = 0;
   }
 
   public static class EffectorConstants {
