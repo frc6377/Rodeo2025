@@ -149,6 +149,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Target Auton Angle", targetAngle);
 
+    SmartDashboard.putNumber("Pigeon Yaw", drivePigeon2.getYaw().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 
