@@ -33,7 +33,7 @@ public final class Constants {
     public static final double maxDrivePercent = 0.5;
     public static final double maxTurnPercent = 0.5;
 
-    public static final double angleTollerance = 1.0;
+    public static final double angleTollerance = 10.0;
   }
 
   public static class ArmConstants {

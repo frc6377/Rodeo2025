@@ -45,10 +45,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public Trigger isGyroInRange(double target) {
     return new Trigger(
         () ->
-            (target - DriveTrainConstants.angleTollerance
-                    < drivePigeon2.getAccumGyroY().getValueAsDouble())
-                && (drivePigeon2.getAccumGyroY().getValueAsDouble()
-                    < target + DriveTrainConstants.angleTollerance));
+            (target - DriveTrainConstants.angleTollerance < drivePigeon2.getYaw().getValueAsDouble()));
   }
 
   public void setLeftPercent(double percent) {
@@ -120,6 +117,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Drive Right Motor 1", rightDriveMotor1.getMotorOutputPercent());
     SmartDashboard.putNumber("Drive Right Motor 2", rightDriveMotor2.getMotorOutputPercent());
 
+    SmartDashboard.putNumber("Pigeon Yaw", drivePigeon2.getYaw().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 

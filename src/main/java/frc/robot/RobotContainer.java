@@ -52,6 +52,12 @@ public class RobotContainer {
         Autos.OneBeackerAuto(m_DriveTrainSubsystem, m_ArmSubsystem, m_EffectorSubsystem);
     autoChooser.addOption(auto1.getName(), auto1);
 
+    Command auto2 = Autos.AutoTurn90Test(m_DriveTrainSubsystem);
+    autoChooser.addOption(auto2.getName(), auto2);
+
+    Command auto3 = Autos.AutoForwardTest(m_DriveTrainSubsystem);
+    autoChooser.addOption(auto3.getName(), auto3);
+
     configTab.add("Auton Selection", autoChooser);
 
     configureBindings();
