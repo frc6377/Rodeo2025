@@ -24,6 +24,19 @@ public final class Autos {
         .withName("OneBeackerAuto");
   }
 
+  public static Command AutoTurn90Test(DriveTrainSubsystem driveTrainSubsystem) {
+    return Commands.sequence(
+            driveTrainSubsystem.turnLeftCommand(90, 0.5),
+            driveTrainSubsystem.turnRightCommand(0, 0.5))
+        .withName("AutoTurn90Test");
+  }
+
+  public static Command AutoForwardTest(DriveTrainSubsystem driveTrainSubsystem) {
+    return Commands.sequence(
+        driveTrainSubsystem.setForwardCommand(2, 0.5),
+        driveTrainSubsystem.setForwardCommand(2, -0.5));
+  }
+
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }

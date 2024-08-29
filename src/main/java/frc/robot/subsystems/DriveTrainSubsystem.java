@@ -39,6 +39,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveMotor2.setInverted(true);
 
     drivePigeon2 = new Pigeon2(MotorIDs.Pigeon2ID);
+    drivePigeon2.setYaw(0);
   }
 
   public Trigger isGyroInRange(double target) {
