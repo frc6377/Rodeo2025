@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,9 +23,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private final VictorSPX rightDriveMotor2;
 
   private final Pigeon2 drivePigeon2;
-
-  private final PIDController drivePID;
-
   private Double targetAngle;
 
   /** Creates a new ExampleSubsystem. */
@@ -45,8 +41,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     drivePigeon2 = new Pigeon2(MotorIDs.Pigeon2ID);
     drivePigeon2.setYaw(0);
-
-    drivePID = new PIDController(0.1, 0, 0);
 
     targetAngle = drivePigeon2.getYaw().getValueAsDouble();
   }
@@ -147,9 +141,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Drive Right Motor 1", rightDriveMotor1.getMotorOutputPercent());
     SmartDashboard.putNumber("Drive Right Motor 2", rightDriveMotor2.getMotorOutputPercent());
 
-    SmartDashboard.putNumber("Target Auton Angle", targetAngle);
-
     SmartDashboard.putNumber("Pigeon Yaw", drivePigeon2.getYaw().getValueAsDouble());
+    SmartDashboard.putNumber("Target Auton Angle", targetAngle);
     // This method will be called once per scheduler run
   }
 
