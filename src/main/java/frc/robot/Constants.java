@@ -20,11 +20,11 @@ public final class Constants {
   public static class DrivetrainConstants {
     public static final double maxDrivePercent = 0.5;
   }
-  public static class armConstants {
+  public static class ArmConstants {
     public static final double scoreAngle = 135.0;
     public static final double stowedAngle = 30.0;
-    public static final double kArmP = 0.5;
-    public static final double kArmI = 0.2;
-    public static final double kArmD = 0.05;
+    public static final double kArmG = 0.56;
+    public static final double kArmV = 2.15;
+    public static final double kArmA = 0.03;
   }
 }
