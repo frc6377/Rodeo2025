@@ -7,13 +7,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.MotorIDs;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DriveTrainSubsystem extends SubsystemBase {
@@ -23,6 +24,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private final VictorSPX rightDriveMotor2;
 
   private final Pigeon2 drivePigeon2;
+
+  private final PIDController drivePID;
+
+  private Double targetAngle;
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
@@ -40,15 +45,17 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     drivePigeon2 = new Pigeon2(MotorIDs.Pigeon2ID);
     drivePigeon2.setYaw(0);
+
+    drivePID = new PIDController(0.1, 0, 0);
+
+    targetAngle = drivePigeon2.getYaw().getValueAsDouble();
   }
 
-  public Trigger isGyroInRange(double target) {
-    return new Trigger(
-        () ->
-            (target - DriveTrainConstants.angleTollerance
-                    < drivePigeon2.getAccumGyroY().getValueAsDouble())
-                && (drivePigeon2.getAccumGyroY().getValueAsDouble()
-                    < target + DriveTrainConstants.angleTollerance));
+  public BooleanSupplier isGyroNotInRange(double target) {
+    return () ->
+        drivePigeon2.getYaw().getValueAsDouble() < (target - DriveTrainConstants.angleTollerance)
+            || drivePigeon2.getYaw().getValueAsDouble()
+                > (target + DriveTrainConstants.angleTollerance);
   }
 
   public void setLeftPercent(double percent) {
@@ -80,27 +87,47 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public Command setForwardCommand(double sec, double percent) {
     return Commands.deadline(
         Commands.waitSeconds(sec),
-        run(
+        runEnd(
             () -> {
               setLeftPercent(percent);
               setRightPercent(percent);
+            },
+            () -> {
+              setLeftPercent(0);
+              setRightPercent(0);
             }));
   }
 
   public Command turnLeftCommand(double deg, double percent) {
+    targetAngle = drivePigeon2.getAccumGyroY().getValueAsDouble() - deg;
     return run(() -> {
-          setLeftPercent(-percent);
-          setRightPercent(percent);
+          if (drivePigeon2.getYaw().getValueAsDouble()
+              > (targetAngle + DriveTrainConstants.angleTollerance)) {
+            setLeftPercent(-percent);
+            setRightPercent(percent);
+          } else if (drivePigeon2.getYaw().getValueAsDouble()
+              < (targetAngle - DriveTrainConstants.angleTollerance)) {
+            setLeftPercent(percent);
+            setRightPercent(-percent);
+          }
         })
-        .onlyWhile(isGyroInRange(deg).negate());
+        .onlyWhile(isGyroNotInRange(targetAngle));
   }
 
   public Command turnRightCommand(double deg, double percent) {
+    targetAngle = drivePigeon2.getAccumGyroY().getValueAsDouble() - deg;
     return run(() -> {
-          setLeftPercent(percent);
-          setRightPercent(-percent);
+          if (drivePigeon2.getYaw().getValueAsDouble()
+              > (targetAngle + DriveTrainConstants.angleTollerance)) {
+            setLeftPercent(-percent);
+            setRightPercent(percent);
+          } else if (drivePigeon2.getYaw().getValueAsDouble()
+              < (targetAngle - DriveTrainConstants.angleTollerance)) {
+            setLeftPercent(percent);
+            setRightPercent(-percent);
+          }
         })
-        .onlyWhile(isGyroInRange(deg).negate());
+        .onlyWhile(isGyroNotInRange(targetAngle));
   }
 
   /**
@@ -119,6 +146,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Drive Left Motor 2", leftDriveMotor2.getMotorOutputPercent());
     SmartDashboard.putNumber("Drive Right Motor 1", rightDriveMotor1.getMotorOutputPercent());
     SmartDashboard.putNumber("Drive Right Motor 2", rightDriveMotor2.getMotorOutputPercent());
+
+    SmartDashboard.putNumber("Target Auton Angle", targetAngle);
 
     // This method will be called once per scheduler run
   }
