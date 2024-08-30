@@ -42,9 +42,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    m_DriveTrainSubsystem.setDefaultCommand(
-        m_DriveTrainSubsystem.driveCommand(
-            m_driverController::getLeftY, m_driverController::getRightX));
+    if (Robot.isReal()) {
+      m_DriveTrainSubsystem.setDefaultCommand(
+          m_DriveTrainSubsystem.driveCommand(
+              m_driverController::getLeftY, m_driverController::getRightX));
+    } else {
+      m_DriveTrainSubsystem.setDefaultCommand(
+          m_DriveTrainSubsystem.driveCommand(
+              m_driverController::getLeftY, m_driverController::getLeftX));
+    }
 
     autoChooser = new SendableChooser<Command>();
 

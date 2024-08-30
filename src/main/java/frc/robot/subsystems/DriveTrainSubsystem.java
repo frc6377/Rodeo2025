@@ -7,12 +7,19 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.MotorIDs;
+import frc.robot.Robot;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -24,6 +31,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private final Pigeon2 drivePigeon2;
   private Double targetAngle;
+
+  // Simulation
+  private DifferentialDrivetrainSim m_differentialDrivetrainSim;
+  private Field2d m_field;
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
@@ -43,6 +54,19 @@ public class DriveTrainSubsystem extends SubsystemBase {
     drivePigeon2.setYaw(0);
 
     targetAngle = drivePigeon2.getYaw().getValueAsDouble();
+
+    if (Robot.isSimulation()) {
+      m_field = new Field2d();
+      SmartDashboard.putData("Field", m_field);
+
+      m_differentialDrivetrainSim =
+          DifferentialDrivetrainSim.createKitbotSim(
+              KitbotMotor.kDualCIMPerSide, // 2 CIMs per side.
+              KitbotGearing.k10p71, // 10.71:1
+              KitbotWheelSize.kSixInch, // 6" diameter wheels.
+              null // No measurement noise.
+              );
+    }
   }
 
   public BooleanSupplier isGyroNotInRange(double target) {
@@ -60,17 +84,17 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveMotor1.set(ControlMode.PercentOutput, percent);
   }
 
-  public Command driveCommand(DoubleSupplier leftY, DoubleSupplier rightX) {
+  public Command driveCommand(DoubleSupplier forwardAxis, DoubleSupplier turnAxis) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
         () -> {
           double leftPercent =
-              (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent)
-                  + (rightX.getAsDouble() * DriveTrainConstants.maxTurnPercent);
+              (forwardAxis.getAsDouble() * DriveTrainConstants.maxDrivePercent)
+                  + (turnAxis.getAsDouble() * DriveTrainConstants.maxTurnPercent);
           double rightPercent =
-              (leftY.getAsDouble() * DriveTrainConstants.maxDrivePercent)
-                  + (-rightX.getAsDouble() * DriveTrainConstants.maxDrivePercent);
+              (forwardAxis.getAsDouble() * DriveTrainConstants.maxDrivePercent)
+                  + (-turnAxis.getAsDouble() * DriveTrainConstants.maxDrivePercent);
 
           leftDriveMotor1.set(ControlMode.PercentOutput, leftPercent);
           rightDriveMotor1.set(ControlMode.PercentOutput, rightPercent);
@@ -148,6 +172,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+    m_differentialDrivetrainSim.setInputs(
+        leftDriveMotor1.getMotorOutputPercent() * RobotController.getBatteryVoltage(),
+        rightDriveMotor1.getMotorOutputPercent() * RobotController.getBatteryVoltage());
+    m_differentialDrivetrainSim.update(0.02);
+
+    m_field.setRobotPose(m_differentialDrivetrainSim.getPose());
   }
 }

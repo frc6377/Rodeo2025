@@ -21,7 +21,7 @@ public class ArmSubsystem extends SubsystemBase {
     armMotor2.follow(armMotor1);
   }
 
-  public void setArmPose(double deg) {
+  public void setArmPose(double point) {
     // Need to figure out what encoders will be used before coding
   }
 
