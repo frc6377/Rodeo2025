@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
@@ -16,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.MotorIDs;
@@ -30,6 +34,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private final VictorSPX rightDriveMotor2;
 
   private final Pigeon2 drivePigeon2;
+
+  private final PIDController drivePIDController;
+
   private Double targetAngle;
 
   // Simulation
@@ -53,6 +60,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     drivePigeon2 = new Pigeon2(MotorIDs.Pigeon2ID);
     drivePigeon2.setYaw(0);
 
+    drivePIDController = new PIDController(DriveTrainConstants.kP, 0, 0);
+
     targetAngle = drivePigeon2.getYaw().getValueAsDouble();
 
     if (Robot.isSimulation()) {
@@ -66,14 +75,22 @@ public class DriveTrainSubsystem extends SubsystemBase {
               KitbotWheelSize.kSixInch, // 6" diameter wheels.
               null // No measurement noise.
               );
+      m_differentialDrivetrainSim.setPose(new Pose2d(0.0, 4.5, new Rotation2d()));
     }
   }
 
   public BooleanSupplier isGyroNotInRange(double target) {
+    if (Robot.isSimulation()) {
+      return () ->
+          m_differentialDrivetrainSim.getPose().getRotation().getDegrees()
+                  < (target - DriveTrainConstants.angleTolerance)
+              || m_differentialDrivetrainSim.getPose().getRotation().getDegrees()
+                  > (target + DriveTrainConstants.angleTolerance);
+    }
     return () ->
-        drivePigeon2.getYaw().getValueAsDouble() < (target - DriveTrainConstants.angleTollerance)
+        drivePigeon2.getYaw().getValueAsDouble() < (target - DriveTrainConstants.angleTolerance)
             || drivePigeon2.getYaw().getValueAsDouble()
-                > (target + DriveTrainConstants.angleTollerance);
+                > (target + DriveTrainConstants.angleTolerance);
   }
 
   public void setLeftPercent(double percent) {
@@ -82,6 +99,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   public void setRightPercent(double percent) {
     rightDriveMotor1.set(ControlMode.PercentOutput, percent);
+  }
+
+  public double getDriveAngle() {
+    if (Robot.isSimulation()) {
+      return m_differentialDrivetrainSim.getPose().getRotation().getDegrees();
+    } else {
+      return drivePigeon2.getAccumGyroY().getValueAsDouble();
+    }
   }
 
   public Command driveCommand(DoubleSupplier forwardAxis, DoubleSupplier turnAxis) {
@@ -116,33 +141,64 @@ public class DriveTrainSubsystem extends SubsystemBase {
             }));
   }
 
+  public Command turnTimeCommand(double sec, double percent) {
+    return Commands.deadline(
+        Commands.waitSeconds(sec),
+        runEnd(
+            () -> {
+              setLeftPercent(-percent);
+              setRightPercent(percent);
+            },
+            () -> {
+              setLeftPercent(0);
+              setRightPercent(0);
+            }));
+  }
+
   public Command turnLeftCommand(double deg, double percent) {
-    targetAngle = drivePigeon2.getAccumGyroY().getValueAsDouble() - deg;
-    return run(() -> {
-          if (drivePigeon2.getYaw().getValueAsDouble()
-              > (targetAngle + DriveTrainConstants.angleTollerance)) {
-            setLeftPercent(-percent);
-            setRightPercent(percent);
-          } else if (drivePigeon2.getYaw().getValueAsDouble()
-              < (targetAngle - DriveTrainConstants.angleTollerance)) {
-            setLeftPercent(percent);
-            setRightPercent(-percent);
-          }
-        })
+    targetAngle = m_differentialDrivetrainSim.getPose().getRotation().getDegrees() - deg;
+    SmartDashboard.putNumber("Target Auton Angle", targetAngle);
+    return new PIDCommand(
+            drivePIDController,
+            () -> getDriveAngle(),
+            targetAngle,
+            (output) -> {
+              setLeftPercent(-output);
+              setRightPercent(output);
+            },
+            this)
         .onlyWhile(isGyroNotInRange(targetAngle));
   }
 
   public Command turnRightCommand(double deg, double percent) {
-    targetAngle = drivePigeon2.getAccumGyroY().getValueAsDouble() - deg;
+    if (Robot.isSimulation()) {
+      targetAngle = m_differentialDrivetrainSim.getPose().getRotation().getDegrees() + deg;
+      SmartDashboard.putNumber("Target Auton Angle", targetAngle);
+      return run(
+          () -> {
+            if (m_differentialDrivetrainSim.getPose().getRotation().getDegrees()
+                > (targetAngle + DriveTrainConstants.angleTolerance)) {
+              setLeftPercent(percent);
+              setRightPercent(-percent);
+            } else if (m_differentialDrivetrainSim.getPose().getRotation().getDegrees()
+                < (targetAngle - DriveTrainConstants.angleTolerance)) {
+              setLeftPercent(-percent);
+              setRightPercent(percent);
+            }
+          });
+    }
+
+    targetAngle = drivePigeon2.getAccumGyroY().getValueAsDouble() + deg;
+    SmartDashboard.putNumber("Target Auton Angle", targetAngle);
     return run(() -> {
           if (drivePigeon2.getYaw().getValueAsDouble()
-              > (targetAngle + DriveTrainConstants.angleTollerance)) {
-            setLeftPercent(-percent);
-            setRightPercent(percent);
-          } else if (drivePigeon2.getYaw().getValueAsDouble()
-              < (targetAngle - DriveTrainConstants.angleTollerance)) {
+              > (targetAngle + DriveTrainConstants.angleTolerance)) {
             setLeftPercent(percent);
             setRightPercent(-percent);
+          } else if (drivePigeon2.getYaw().getValueAsDouble()
+              < (targetAngle - DriveTrainConstants.angleTolerance)) {
+            setLeftPercent(-percent);
+            setRightPercent(percent);
           }
         })
         .onlyWhile(isGyroNotInRange(targetAngle));
@@ -166,8 +222,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Drive Right Motor 2", rightDriveMotor2.getMotorOutputPercent());
 
     SmartDashboard.putNumber("Pigeon Yaw", drivePigeon2.getYaw().getValueAsDouble());
-    SmartDashboard.putNumber("Target Auton Angle", targetAngle);
-    // This method will be called once per scheduler run
   }
 
   @Override
@@ -178,5 +232,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     m_differentialDrivetrainSim.update(0.02);
 
     m_field.setRobotPose(m_differentialDrivetrainSim.getPose());
+
+    SmartDashboard.putNumber(
+        "Simulation Rotation", m_differentialDrivetrainSim.getPose().getRotation().getDegrees());
   }
 }

@@ -17,24 +17,31 @@ public final class Autos {
       ArmSubsystem armSubsystem,
       EffectorSubsystem effectorSubsystem) {
     return Commands.sequence(
-            driveSubsystem.setForwardCommand(3, 0.5),
-            armSubsystem.scoreHighCommand(),
-            effectorSubsystem.outakeCommand(),
-            driveSubsystem.setForwardCommand(3, -0.5))
+            driveSubsystem.setForwardCommand(2, 0.5),
+            // armSubsystem.scoreHighCommand(),
+            // effectorSubsystem.outakeCommand(),
+            Commands.waitSeconds(1),
+            driveSubsystem.setForwardCommand(2, -0.5),
+            Commands.waitSeconds(1),
+            driveSubsystem.turnTimeCommand(0.25, 0.5),
+            AutoForwardTest(driveSubsystem))
         .withName("OneBeackerAuto");
   }
 
   public static Command AutoTurn90Test(DriveTrainSubsystem driveTrainSubsystem) {
-    return Commands.sequence(
-            driveTrainSubsystem.turnLeftCommand(90, 0.5),
-            driveTrainSubsystem.turnRightCommand(0, 0.5))
+    return Commands.sequence(driveTrainSubsystem.turnLeftCommand(90, 0.5))
         .withName("AutoTurn90Test");
   }
 
   public static Command AutoForwardTest(DriveTrainSubsystem driveTrainSubsystem) {
     return Commands.sequence(
-        driveTrainSubsystem.setForwardCommand(2, 0.5),
-        driveTrainSubsystem.setForwardCommand(2, -0.5));
+            driveTrainSubsystem.setForwardCommand(2, 0.5),
+            driveTrainSubsystem.setForwardCommand(2, -0.5))
+        .withName("AutoForwardTest");
+  }
+
+  public static Command AutoTurnTest(DriveTrainSubsystem driveTrainSubsystem) {
+    return Commands.sequence(driveTrainSubsystem.turnTimeCommand(.3, 0.5)).withName("AutoTurnTest");
   }
 
   private Autos() {

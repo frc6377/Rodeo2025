@@ -64,6 +64,9 @@ public class RobotContainer {
     Command auto3 = Autos.AutoForwardTest(m_DriveTrainSubsystem);
     autoChooser.addOption(auto3.getName(), auto3);
 
+    Command auto4 = Autos.AutoTurnTest(m_DriveTrainSubsystem);
+    autoChooser.addOption(auto4.getName(), auto4);
+
     configTab.add("Auton Selection", autoChooser);
 
     configureBindings();

@@ -30,10 +30,14 @@ public final class Constants {
 
   public static class DriveTrainConstants {
     // Sum of these value should be <= 1 (can be over, would not cause problems)
+    public static final double kP = 0.015;
+
+    public static final double minTurnSpeed = 0.1;
+
     public static final double maxDrivePercent = 0.5;
     public static final double maxTurnPercent = 0.5;
 
-    public static final double angleTollerance = 10.0;
+    public static final double angleTolerance = 1;
   }
 
   public static class ArmConstants {
