@@ -22,5 +22,7 @@ public final class Constants {
     public static final int leftDriveTalonID = 9;
     public static final int rightDriveVictorID = 19;
     public static final int rightDriveTalonID = 4;
+    public static final int pivotMotorID1 = 0;//PLACEHOLDER FIXME!!
+    public static final int pivotMotorID2 = 0;//PLACEHOLDER FIXME!!
   }
 }
