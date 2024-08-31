@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
@@ -38,8 +39,10 @@ public class Drivetrain extends SubsystemBase {
           double right = 0;
           left = forward.getAsDouble();
           right = forward.getAsDouble();
-          left += rotation.getAsDouble();
-          right -= rotation.getAsDouble();
+          left -= rotation.getAsDouble();
+          right += rotation.getAsDouble();
+          left /= 2;
+          right /= 2;
           leftDriveTalon.set(ControlMode.PercentOutput, left);
           rightDriveTalon.set(ControlMode.PercentOutput, right);
         });
@@ -48,6 +51,9 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+    SmartDashboard.putNumber("leftDriveTalon Output", leftDriveTalon.getMotorOutputPercent());
+    SmartDashboard.putNumber("leftDriveVictor Output", leftDriveVictor.getMotorOutputPercent());
+    SmartDashboard.putNumber("rightDriveTalon Output", rightDriveTalon.getMotorOutputPercent());
+    SmartDashboard.putNumber("rightDriveVictor Output", rightDriveVictor.getMotorOutputPercent());
   }
 }
