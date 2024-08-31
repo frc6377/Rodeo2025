@@ -39,7 +39,7 @@ public class Drivetrain extends SubsystemBase {
           left = forward.getAsDouble();
           right = forward.getAsDouble();
           left += rotation.getAsDouble();
-          right += rotation.getAsDouble();
+          right -= rotation.getAsDouble();
           leftDriveTalon.set(ControlMode.PercentOutput, left);
           rightDriveTalon.set(ControlMode.PercentOutput, right);
         });
