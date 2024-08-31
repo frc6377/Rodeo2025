@@ -110,6 +110,13 @@ public class ArmSubsystem extends SubsystemBase {
     return setArmPosition(ArmConstants.highScorePose);
   }
 
+  public Command runArmMotor() {
+    return run(
+        () -> {
+          setArmMotors(1);
+        });
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Arm Motor 1 Output", armMotor1.getMotorOutputPercent());
@@ -120,7 +127,8 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    armSim.setInput(armMotor1.getMotorOutputPercent() * RobotController.getBatteryVoltage());
+    armSim.setInput(armMotor1.getMotorOutputPercent() * RobotController.getBatteryVoltage() * 2);
+
     armSim.update(Robot.defaultPeriodSecs);
     scoringMech.setAngle(
         Units.radiansToDegrees(armSim.getAngleRads()) - ArmConstants.kArmBaseAngle);

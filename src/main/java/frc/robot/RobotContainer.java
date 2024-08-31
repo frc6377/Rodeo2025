@@ -79,10 +79,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
     // Driver Controls
-    m_driverController.leftBumper().whileTrue(m_ArmSubsystem.scoreHighCommand());
-    m_driverController.rightBumper().whileTrue(m_ArmSubsystem.scoreLowCommand());
+    m_driverController.button(1).whileTrue(m_ArmSubsystem.runArmMotor());
 
     // Operator Controls
     m_operatorController

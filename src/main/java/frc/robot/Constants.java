@@ -45,7 +45,7 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    public static final double kP = 1;
+    public static final double kP = 100;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -54,7 +54,7 @@ public final class Constants {
 
     // Simulation constants
     public static final DCMotor kArmMotor = DCMotor.getCIM(2);
-    public static final double kArmGearing = 4;
+    public static final double kArmGearing = 0.25;
     public static final double kArmMOI = 63.958;
     public static final double kArmMinAngle = Units.degreesToRadians(-115);
     public static final double kArmMaxAngle = Units.degreesToRadians(180);
