@@ -18,8 +18,9 @@ public final class Constants {
   }
 
   public static class DrivetrainConstants {
-    public static final double maxDrivePercent = 0.5;
+    public static final double maxDrivePercent = 0.65;
   }
+
   public static class ArmConstants {
     public static final double scoreAngle = 135.0;
     public static final double stowedAngle = 30.0;
