@@ -83,17 +83,21 @@ public class RobotContainer {
     if (Robot.isSimulation()) {
       m_driverController
           .button(1)
-          .whileTrue(m_ArmSubsystem.setArmVelocity())
-          .onFalse(m_ArmSubsystem.stopArmMotors());
+          .whileTrue(m_ArmSubsystem.scoreHighCommand())
+          .onFalse(m_ArmSubsystem.setArmVelocity(0));
+      m_driverController
+          .button(2)
+          .whileTrue(m_ArmSubsystem.setArmVelocity(-1))
+          .onFalse(m_ArmSubsystem.setArmVelocity(0));
     } else {
       m_driverController
           .leftBumper()
-          .whileTrue(m_ArmSubsystem.scoreHighCommand())
-          .onFalse(m_ArmSubsystem.stopArmMotors());
+          .whileTrue(m_ArmSubsystem.setArmVelocity(1))
+          .onFalse(m_ArmSubsystem.setArmVelocity(0));
       m_driverController
           .rightBumper()
-          .whileTrue(m_ArmSubsystem.scoreLowCommand())
-          .onFalse(m_ArmSubsystem.stopArmMotors());
+          .whileTrue(m_ArmSubsystem.setArmVelocity(-1))
+          .onFalse(m_ArmSubsystem.setArmVelocity(0));
     }
 
     // Operator Controls

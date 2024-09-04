@@ -112,8 +112,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
   }
 
-  public Command setArmVelocity() {
-    return run(() -> setArmMotors(1));
+  public Command setArmVelocity(double velocity) {
+    return run(() -> setArmMotors(velocity));
   }
 
   public Command setArmPosition(double position) {
@@ -133,10 +133,6 @@ public class ArmSubsystem extends SubsystemBase {
 
   public Command scoreHighCommand() {
     return setArmPosition(ArmConstants.highScorePose);
-  }
-
-  public Command stopArmMotors() {
-    return runOnce(() -> setArmMotors(0));
   }
 
   @Override
