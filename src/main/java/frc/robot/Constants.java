@@ -45,16 +45,21 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    public static final double kP = 100;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kP = 0.25;
+    public static final double kI = 0.025;
+    public static final double kD = 0.0025;
 
-    public static final double lowScorePose = 0;
-    public static final double highScorePose = 0;
+    public static final double kS = 0;
+    public static final double kG = 1.13;
+    public static final double kV = 2.15;
+    public static final double kA = 0.1;
+
+    public static final double lowScorePose = Units.degreesToRadians(-90);
+    public static final double highScorePose = Units.degreesToRadians(25);
 
     // Simulation constants
     public static final DCMotor kArmMotor = DCMotor.getCIM(2);
-    public static final double kArmGearing = 0.25;
+    public static final double kArmGearing = 4;
     public static final double kArmMOI = 63.958;
     public static final double kArmMinAngle = Units.degreesToRadians(-115);
     public static final double kArmMaxAngle = Units.degreesToRadians(180);

@@ -7,11 +7,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.CANcoder;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -33,6 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
   private final CANcoder armEncoder;
 
   private final PIDController armPIDController;
+  private final ArmFeedforward armFeedforward;
 
   private final ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
 
@@ -50,8 +54,10 @@ public class ArmSubsystem extends SubsystemBase {
     armMotor2.follow(armMotor1);
 
     armEncoder = new CANcoder(MotorIDs.armEncoder);
+    EncoderSim armEncoderSim = new EncoderSim(new Encoder(0, 1));
 
     armPIDController = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
+    armFeedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
 
     if (Robot.isSimulation()) {
       armSim =
@@ -63,9 +69,9 @@ public class ArmSubsystem extends SubsystemBase {
               ArmConstants.kArmMinAngle,
               ArmConstants.kArmMaxAngle,
               true,
-              Units.degreesToRadians(45));
-      armMechanism2d = new Mechanism2d(30, 30);
-      root = armMechanism2d.getRoot("Root", 0, 0);
+              Units.degreesToRadians(-90));
+      armMechanism2d = new Mechanism2d(50, 50);
+      root = armMechanism2d.getRoot("Root", 15, 0);
       baseMech =
           root.append(
               new MechanismLigament2d(
@@ -89,15 +95,34 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void setArmMotors(double output) {
     armMotor1.set(ControlMode.PercentOutput, output);
-    armMotor2.set(ControlMode.PercentOutput, output);
+  }
+
+  public double calcArmFeedforward() {
+    double calc =
+        armPIDController.calculate(getArmPoseRads(), armEncoder.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Arm Feedforward", calc);
+    return calc;
+  }
+
+  public double getArmPoseRads() {
+    if (Robot.isSimulation()) {
+      return armSim.getAngleRads();
+    } else {
+      return Units.rotationsToRadians(armEncoder.getPosition().getValueAsDouble());
+    }
+  }
+
+  public Command setArmVelocity() {
+    return run(() -> setArmMotors(1));
   }
 
   public Command setArmPosition(double position) {
+    SmartDashboard.putNumber("Arm Target", Units.radiansToDegrees(position));
     return new PIDCommand(
         armPIDController,
-        () -> armEncoder.getPosition().getValueAsDouble(),
+        () -> getArmPoseRads(),
         position,
-        (output) -> setArmMotors(output),
+        (output) -> setArmMotors(output + calcArmFeedforward()),
         this);
   }
 
@@ -110,11 +135,8 @@ public class ArmSubsystem extends SubsystemBase {
     return setArmPosition(ArmConstants.highScorePose);
   }
 
-  public Command runArmMotor() {
-    return run(
-        () -> {
-          setArmMotors(1);
-        });
+  public Command stopArmMotors() {
+    return runOnce(() -> setArmMotors(0));
   }
 
   @Override
@@ -122,17 +144,20 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Motor 1 Output", armMotor1.getMotorOutputPercent());
     SmartDashboard.putNumber("Arm Motor 2 Output", armMotor2.getMotorOutputPercent());
 
-    SmartDashboard.putNumber("Arm Angle", armEncoder.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Arm Encoder Angle Deg",
+        Units.rotationsToDegrees(armEncoder.getPosition().getValueAsDouble()));
+    SmartDashboard.putNumber("Arm Encoder Velocity", armEncoder.getVelocity().getValueAsDouble());
   }
 
   @Override
   public void simulationPeriodic() {
     armSim.setInput(armMotor1.getMotorOutputPercent() * RobotController.getBatteryVoltage() * 2);
-
     armSim.update(Robot.defaultPeriodSecs);
-    scoringMech.setAngle(
-        Units.radiansToDegrees(armSim.getAngleRads()) - ArmConstants.kArmBaseAngle);
 
-    SmartDashboard.putNumber("Arm Sim Angle", Units.radiansToDegrees(armSim.getAngleRads()));
+    scoringMech.setAngle(Units.radiansToDegrees(getArmPoseRads()) - ArmConstants.kArmBaseAngle);
+    armEncoder.setPosition(Units.radiansToRotations(getArmPoseRads()));
+
+    SmartDashboard.putNumber("Arm Sim Angle", Units.radiansToDegrees(getArmPoseRads()));
   }
 }

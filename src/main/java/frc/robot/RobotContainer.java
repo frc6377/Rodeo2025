@@ -25,7 +25,7 @@ import frc.robot.subsystems.EffectorSubsystem;
  */
 public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
-  private ShuffleboardTab configTab = Shuffleboard.getTab("Config");
+  private final ShuffleboardTab configTab = Shuffleboard.getTab("Config");
 
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem m_DriveTrainSubsystem = new DriveTrainSubsystem();
@@ -52,7 +52,7 @@ public class RobotContainer {
               m_driverController::getLeftY, m_driverController::getLeftX));
     }
 
-    autoChooser = new SendableChooser<Command>();
+    autoChooser = new SendableChooser<>();
 
     Command auto1 =
         Autos.OneBeackerAuto(m_DriveTrainSubsystem, m_ArmSubsystem, m_EffectorSubsystem);
@@ -80,7 +80,21 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Driver Controls
-    m_driverController.button(1).whileTrue(m_ArmSubsystem.runArmMotor());
+    if (Robot.isSimulation()) {
+      m_driverController
+          .button(1)
+          .whileTrue(m_ArmSubsystem.setArmVelocity())
+          .onFalse(m_ArmSubsystem.stopArmMotors());
+    } else {
+      m_driverController
+          .leftBumper()
+          .whileTrue(m_ArmSubsystem.scoreHighCommand())
+          .onFalse(m_ArmSubsystem.stopArmMotors());
+      m_driverController
+          .rightBumper()
+          .whileTrue(m_ArmSubsystem.scoreLowCommand())
+          .onFalse(m_ArmSubsystem.stopArmMotors());
+    }
 
     // Operator Controls
     m_operatorController
