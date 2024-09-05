@@ -16,10 +16,12 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
   public static class PivotRange {
     public static final int PivotMotorMin = 0;
     public static final int PivotMotorMax = 0;
   }
+
   public static class MotorIDs {
     public static final int leftDriveVictorID = 10;
     public static final int leftDriveTalonID = 9;

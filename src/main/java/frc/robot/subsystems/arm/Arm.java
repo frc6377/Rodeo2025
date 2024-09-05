@@ -4,20 +4,28 @@
 
 package frc.robot.subsystems.arm;
 
-import java.util.function.DoubleSupplier;
-
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.MotorIDs;
+import java.util.function.DoubleSupplier;
 
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
+  private final TalonSRX pivotMotor;
+
   public Arm() {
-    public Command movePivot(DoubleSupplier armMovement) {
-      return run(
+    pivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
+  }
+
+  public Command movePivot(DoubleSupplier armMovement) {
+    return run(
         () -> {
-          
-        }
-      );
-    }
+          double pivot = 0;
+          pivot = armMovement.getAsDouble();
+          pivotMotor.set(ControlMode.PercentOutput, pivot);
+        });
   }
 
   @Override
