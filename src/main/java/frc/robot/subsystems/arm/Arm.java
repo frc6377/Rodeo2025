@@ -6,27 +6,52 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 import java.util.function.DoubleSupplier;
-
+import frc.robot.Constants.PivotRange;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private final TalonSRX pivotMotor;
+  private double targetAngle = 0;
+  private double kP = 0.1; // Proportional gain
+  private double kI = 0.0; // Integral gain
+  private double kD = 0.0; // Derivative gain
+  private double kF = 0.0; // Feedforward gain
+  private double dt = 0.02; // Time in seconds between each update
+  private double minAngle = PivotRange.PivotMotorMin;
+  private double maxAngle = PivotRange.PivotMotorMax;
 
   public Arm() {
     pivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
-  }
+    pivotMotor.configFactoryDefault();
+        pivotMotor.setNeutralMode(NeutralMode.Brake);
+        pivotMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+        pivotMotor.config_kP(0, kP);
+        pivotMotor.config_kI(0, kI);
+        pivotMotor.config_kD(0, kD);
+        pivotMotor.config_kF(0, kF);
 
-  public Command movePivot(DoubleSupplier armMovement) {
-    return run(
-        () -> {
-          double pivot = 0;
-          pivot = armMovement.getAsDouble();
-          pivotMotor.set(ControlMode.PercentOutput, pivot);
-        });
-  }
+        // Configure follower Talon
+    }
+
+    public void setTargetAngle(double angle) {
+      targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+    }
+
+    public void update() {
+        double currentAngle = pivotMotor.getSelectedSensorPosition(0);
+        double error = targetAngle - currentAngle;
+
+        double feedforward = kF * targetAngle; // Calculate feedforward based on target angle
+        double pidOutput = kP * error + kI * (error * dt) + kD * (error / dt);
+
+        pivotMotor.set(ControlMode.PercentOutput, feedforward + pidOutput);
+}
 
   @Override
   public void periodic() {
