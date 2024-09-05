@@ -10,6 +10,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
@@ -105,7 +106,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     if (Robot.isSimulation()) {
       return m_differentialDrivetrainSim.getPose().getRotation().getDegrees();
     } else {
-      return drivePigeon2.getAccumGyroY().getValueAsDouble();
+      return Units.radiansToDegrees(drivePigeon2.getAccumGyroY().getValueAsDouble());
     }
   }
 
