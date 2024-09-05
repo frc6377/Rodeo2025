@@ -142,7 +142,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public Command turnCommand(double deg) {
-    targetAngle = m_differentialDrivetrainSim.getPose().getRotation().getDegrees() - deg;
+    targetAngle = getDriveAngle() - deg;
     SmartDashboard.putNumber("Target Auton Angle", targetAngle);
     return new PIDCommand(
             drivePIDController,

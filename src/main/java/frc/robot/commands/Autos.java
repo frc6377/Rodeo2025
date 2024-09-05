@@ -30,14 +30,17 @@ public final class Autos {
 
   public static Command AutoTurn90Test(DriveTrainSubsystem driveTrainSubsystem) {
     return Commands.sequence(
-            driveTrainSubsystem.turnCommand(90), driveTrainSubsystem.turnCommand(0))
+            driveTrainSubsystem.turnCommand(90),
+            Commands.waitSeconds(2),
+            driveTrainSubsystem.turnCommand(0))
         .withName("AutoTurn90Test");
   }
 
   public static Command AutoForwardTest(DriveTrainSubsystem driveTrainSubsystem) {
     return Commands.sequence(
-            driveTrainSubsystem.setForwardCommand(2, 0.5),
-            driveTrainSubsystem.setForwardCommand(2, -0.5))
+            driveTrainSubsystem.setForwardCommand(0.75, -0.5),
+            Commands.waitSeconds(2),
+            driveTrainSubsystem.setForwardCommand(0.75, 0.5))
         .withName("AutoForwardTest");
   }
 
