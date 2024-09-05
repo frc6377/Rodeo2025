@@ -61,7 +61,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     drivePigeon2 = new Pigeon2(MotorIDs.Pigeon2ID);
     drivePigeon2.setYaw(0);
 
-    drivePIDController = new PIDController(DriveTrainConstants.kP, 0, 0);
+    drivePIDController = DriveTrainConstants.drivePID.getPIDController();
+    DriveTrainConstants.drivePID.createTunableNumbers("Drive PID", drivePIDController, this);
 
     targetAngle = drivePigeon2.getYaw().getValueAsDouble();
 
