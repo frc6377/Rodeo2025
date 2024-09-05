@@ -45,28 +45,32 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    public static final double kP = 0.25;
-    public static final double kI = 0.025;
-    public static final double kD = 0.0025;
+    public static final double kP = 2;
+    public static final double kI = 0;
+    public static final double kD = 0;
 
     public static final double kS = 0;
-    public static final double kG = 1.13;
+    public static final double kG = 0.14; // 0.55
     public static final double kV = 2.15;
-    public static final double kA = 0.1;
+    public static final double kA = 0.01; // 0.05
 
     public static final double lowScorePose = Units.degreesToRadians(-90);
     public static final double highScorePose = Units.degreesToRadians(25);
 
     // Simulation constants
     public static final DCMotor kArmMotor = DCMotor.getCIM(2);
-    public static final double kArmGearing = 4;
-    public static final double kArmMOI = 63.958;
+    public static final double kArmGearing = 100;
+    // CAD MOI in in^2 lb
+    // xx 109.765 (Using)
+    // yy 92.943
+    // zz 47
+    public static final double kArmMOI = 4.625509184446;
     public static final double kArmMinAngle = Units.degreesToRadians(-115);
     public static final double kArmMaxAngle = Units.degreesToRadians(180);
 
-    public static final double kArmBaseLength = 25.88;
+    public static final double kArmBaseLength = Units.inchesToMeters(25.88);
     public static final double kArmBaseAngle = 63.6;
-    public static final double kArmScoringLength = 25.698;
+    public static final double kArmScoringLength = Units.inchesToMeters(25.88);
     public static final double kArmScoringAngle = Units.degreesToRadians(-45);
   }
 

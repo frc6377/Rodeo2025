@@ -57,7 +57,8 @@ public class ArmSubsystem extends SubsystemBase {
     EncoderSim armEncoderSim = new EncoderSim(new Encoder(0, 1));
 
     armPIDController = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
-    armFeedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
+    armFeedforward =
+        new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
 
     if (Robot.isSimulation()) {
       armSim =
@@ -70,8 +71,8 @@ public class ArmSubsystem extends SubsystemBase {
               ArmConstants.kArmMaxAngle,
               true,
               Units.degreesToRadians(-90));
-      armMechanism2d = new Mechanism2d(50, 50);
-      root = armMechanism2d.getRoot("Root", 15, 0);
+      armMechanism2d = new Mechanism2d(1, 1);
+      root = armMechanism2d.getRoot("Root", 0.25, 0);
       baseMech =
           root.append(
               new MechanismLigament2d(
@@ -99,7 +100,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public double calcArmFeedforward() {
     double calc =
-        armPIDController.calculate(getArmPoseRads(), armEncoder.getVelocity().getValueAsDouble());
+        armFeedforward.calculate(getArmPoseRads(), armEncoder.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Arm Feedforward", calc);
     return calc;
   }
@@ -123,6 +124,7 @@ public class ArmSubsystem extends SubsystemBase {
         () -> getArmPoseRads(),
         position,
         (output) -> setArmMotors(output + calcArmFeedforward()),
+        // (output) -> setArmMotors(calcArmFeedforward()),
         this);
   }
 
@@ -148,7 +150,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    armSim.setInput(armMotor1.getMotorOutputPercent() * RobotController.getBatteryVoltage() * 2);
+    armSim.setInput(armMotor1.getMotorOutputPercent() * RobotController.getBatteryVoltage());
     armSim.update(Robot.defaultPeriodSecs);
 
     scoringMech.setAngle(Units.radiansToDegrees(getArmPoseRads()) - ArmConstants.kArmBaseAngle);

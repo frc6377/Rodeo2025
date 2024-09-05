@@ -87,7 +87,7 @@ public class RobotContainer {
           .onFalse(m_ArmSubsystem.setArmVelocity(0));
       m_driverController
           .button(2)
-          .whileTrue(m_ArmSubsystem.setArmVelocity(-1))
+          .whileTrue(m_ArmSubsystem.setArmVelocity(1))
           .onFalse(m_ArmSubsystem.setArmVelocity(0));
     } else {
       m_driverController
