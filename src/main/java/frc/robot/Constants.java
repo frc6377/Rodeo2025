@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.utilities.HowdyPID;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -30,6 +31,9 @@ public final class Constants {
 
     public static final int effectorMotor1 = 9;
     public static final int effectorMotor2 = 10;
+
+    public static final int wristMotor = 11;
+    public static final int wristEncoder = 12;
   }
 
   public static class DriveTrainConstants {
@@ -45,16 +49,14 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    public static final double kP = 2;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final HowdyPID armPID = new HowdyPID(2, 0.0, 0.0);
 
     public static final double kS = 0;
     public static final double kG = 0.14; // 0.55
     public static final double kV = 2.15;
     public static final double kA = 0.01; // 0.05
 
-    public static final double lowScorePose = Units.degreesToRadians(-90);
+    public static final double lowScorePose = Units.degreesToRadians(-45);
     public static final double highScorePose = Units.degreesToRadians(25);
 
     // Simulation constants
@@ -64,7 +66,7 @@ public final class Constants {
     // xx 109.765 (Using)
     // yy 92.943
     // zz 47
-    public static final double kArmMOI = 4.625509184446;
+    public static final double kArmMOI = 4.625509184446; // Units = m^2 kg
     public static final double kArmMinAngle = Units.degreesToRadians(-115);
     public static final double kArmMaxAngle = Units.degreesToRadians(180);
 
@@ -76,7 +78,12 @@ public final class Constants {
 
   public static class EffectorConstants {
     public static final double intakePercent = 0.25;
-    public static final double outakePercent = 0.25;
+    public static final double outtakePercent = 0.25;
+
+    public static final boolean isBackUp = false;
+    public static final HowdyPID wristPID = new HowdyPID(0.1, 0.0, 0.0);
+    public static final double lowScore = Units.degreesToRadians(25);
+    public static final double highScore = Units.degreesToRadians(45);
   }
 
   public static class OperatorConstants {

@@ -28,6 +28,10 @@ public final class Autos {
         .withName("OneBeackerAuto");
   }
 
+  // Commands
+  // Note: forwards and backwards are reversed for the drive base due to how the Xbox controller
+  // works
+  // So negative numbers will be forwards, and positive will be backwards.
   public static Command AutoTurn90Test(DriveTrainSubsystem driveTrainSubsystem) {
     return Commands.sequence(
             driveTrainSubsystem.turnCommand(90),

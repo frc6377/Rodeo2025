@@ -56,7 +56,9 @@ public class ArmSubsystem extends SubsystemBase {
     armEncoder = new CANcoder(MotorIDs.armEncoder);
     EncoderSim armEncoderSim = new EncoderSim(new Encoder(0, 1));
 
-    armPIDController = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
+    armPIDController = ArmConstants.armPID.getPIDController();
+    ArmConstants.armPID.createTunableNumbers("Arm PID", armPIDController, this);
+
     armFeedforward =
         new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
 

@@ -15,6 +15,8 @@ import org.littletonrobotics.junction.LoggedRobot;
  * project.
  */
 public class Robot extends LoggedRobot {
+  public static final boolean isCompetition = false;
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
