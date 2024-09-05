@@ -4,11 +4,21 @@
 
 package frc.robot.subsystems.arm;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
-  public Arm() {}
+  public Arm() {
+    public Command movePivot(DoubleSupplier armMovement) {
+      return run(
+        () -> {
+          
+        }
+      );
+    }
+  }
 
   @Override
   public void periodic() {
