@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.MotorIDs;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -28,38 +27,30 @@ public class IntakeSubsystem extends SubsystemBase {
    * @return a command
    */
   public Command intake() {
-
-    return runOnce(
-            () -> {
-              leftArmMotor.set(ControlMode.PercentOutput, 1);
-              rightArmMotor.set(ControlMode.PercentOutput, 1);
-            })
-        .andThen(new WaitCommand(1))
-        .andThen(
-            runOnce(
-                () -> {
-                  leftArmMotor.set(ControlMode.PercentOutput, 0);
-                  rightArmMotor.set(ControlMode.PercentOutput, 0);
-                }));
+    return startEnd(
+        () -> {
+          leftArmMotor.set(ControlMode.PercentOutput, 1);
+          rightArmMotor.set(ControlMode.PercentOutput, 1);
+        },
+        () -> {
+          leftArmMotor.set(ControlMode.PercentOutput, 0);
+          rightArmMotor.set(ControlMode.PercentOutput, 0);
+        });
 
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
 
   }
 
   public Command outtake() {
-
-    return runOnce(
-            () -> {
-              leftArmMotor.set(ControlMode.PercentOutput, -1);
-              rightArmMotor.set(ControlMode.PercentOutput, -1);
-            })
-        .andThen(new WaitCommand(1))
-        .andThen(
-            runOnce(
-                () -> {
-                  leftArmMotor.set(ControlMode.PercentOutput, 0);
-                  rightArmMotor.set(ControlMode.PercentOutput, 0);
-                }));
+    return startEnd(
+        () -> {
+          leftArmMotor.set(ControlMode.PercentOutput, -1);
+          rightArmMotor.set(ControlMode.PercentOutput, -1);
+        },
+        () -> {
+          leftArmMotor.set(ControlMode.PercentOutput, 0);
+          rightArmMotor.set(ControlMode.PercentOutput, 0);
+        });
 
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
 
