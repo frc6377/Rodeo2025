@@ -6,8 +6,6 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 import java.util.function.DoubleSupplier;
@@ -22,7 +20,7 @@ public class Arm extends SubsystemBase {
   private double kI = 0.0; // Integral gain
   private double kD = 0.0; // Derivative gain
   private double kF = 0.0; // Feedforward gain
-  private double dt = 0.02; // Time in seconds between each update
+  private double dt = 0.05; // Time in seconds between each update
   private double minAngle = PivotRange.PivotMotorMin;
   private double maxAngle = PivotRange.PivotMotorMax;
 
@@ -39,8 +37,8 @@ public class Arm extends SubsystemBase {
         // Configure follower Talon
     }
 
-    public void setTargetAngle(double angle) {
-      targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+    public void setTargetAngle(DoubleSupplier angle) {
+      targetAngle = Math.max(minAngle, Math.min(maxAngle, angle.getAsDouble()));
     }
 
     public void update() {
