@@ -47,13 +47,13 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     */
     /*
     m_DriveSubsystem.setDefaultCommand(
         m_DriveSubsystem.arcadeCommand(
             m_driverController::getLeftY, m_driverController::getRightX));
     */
+
     m_DriveSubsystem.setDefaultCommand(
         m_DriveSubsystem.tankCommand(m_driverController::getLeftY, m_driverController::getRightY));
   }

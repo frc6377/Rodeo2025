@@ -22,6 +22,8 @@ public final class Constants {
     public static final int leftDriveMotor2 = 19;
     public static final int rightDriveMotor1 = 4;
     public static final int rightDriveMotor2 = 10;
+    public static final int rightArmMotor = 5; // TODO: change after actual controllers
+    public static final int leftArmMotor = 8; // TODO: change after actual controllers
   }
 
   public static class DriveTrainConstants {

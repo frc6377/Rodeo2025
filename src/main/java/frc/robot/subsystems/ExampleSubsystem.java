@@ -17,12 +17,10 @@ public class ExampleSubsystem extends SubsystemBase {
    * @return a command
    */
   public Command exampleMethodCommand() {
+    runEnd(null, null);
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+    return runOnce(() -> {}).andThen();
   }
 
   /**
