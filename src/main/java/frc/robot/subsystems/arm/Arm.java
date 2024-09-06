@@ -6,6 +6,8 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 import java.util.function.DoubleSupplier;
@@ -36,9 +38,15 @@ public class Arm extends SubsystemBase {
 
         // Configure follower Talon
     }
-
-    public void setTargetAngle(DoubleSupplier angle) {
-      targetAngle = Math.max(minAngle, Math.min(maxAngle, angle.getAsDouble()));
+    public double getCurrentAngle() {
+      return pivotMotor.getSelectedSensorPosition(0);
+    }
+    public Command setTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
+      return run(
+        ()->{
+      double angle = ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble())*2)+getCurrentAngle();
+      targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+        });
     }
 
     public void update() {

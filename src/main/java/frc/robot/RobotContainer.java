@@ -5,12 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 
@@ -22,7 +21,6 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivetrain drivetrain;
   private final Arm arm;
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -48,14 +46,12 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-
     drivetrain.setDefaultCommand(
         drivetrain.driveCommand(m_driverController::getLeftY, m_driverController::getRightX));
+    arm.setDefaultCommand(
+        arm.setTargetAngle(m_driverController::getLeftTriggerAxis,m_driverController::getRightTriggerAxis));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -65,6 +61,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+        // Create commands for different actions
+    
+
+    // Create a command group to sequence the actions
+
+
+    return Autos.withBeakerCommand(drivetrain, arm);
   }
 }

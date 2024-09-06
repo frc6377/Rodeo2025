@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 import java.util.function.DoubleSupplier;
@@ -47,7 +48,21 @@ public class Drivetrain extends SubsystemBase {
           rightDriveTalon.set(ControlMode.PercentOutput, right);
         });
   }
-
+  public Command goForwardCommand(double speed, double seconds) {
+    return Commands.deadline(
+      Commands.waitSeconds(seconds),
+      runEnd(
+        () -> {
+          leftDriveTalon.set(ControlMode.PercentOutput, speed);
+          rightDriveTalon.set(ControlMode.PercentOutput, speed);
+        },
+        () -> {
+          leftDriveTalon.set(ControlMode.PercentOutput, 0);
+          rightDriveTalon.set(ControlMode.PercentOutput, 0);
+        }
+      )
+    );
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
