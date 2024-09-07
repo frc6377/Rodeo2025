@@ -38,7 +38,7 @@ public final class Constants {
 
   public static class DriveTrainConstants {
     // Sum of these value should be <= 1 (can be over, would not cause problems)
-    public static final HowdyPID drivePID = new HowdyPID(0.02, 0.002, 0.0);
+    public static final HowdyPID drivePID = new HowdyPID(0.0075, 0, 0);
 
     public static final double minTurnSpeed = 0.1;
 

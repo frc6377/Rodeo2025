@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.MotorIDs;
 import frc.robot.Robot;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DriveTrainSubsystem extends SubsystemBase {
@@ -80,18 +80,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
   }
 
-  public BooleanSupplier isGyroNotInRange(double target) {
-    if (Robot.isSimulation()) {
-      return () ->
-          m_differentialDrivetrainSim.getPose().getRotation().getDegrees()
-                  < (target - DriveTrainConstants.angleTolerance)
-              || m_differentialDrivetrainSim.getPose().getRotation().getDegrees()
-                  > (target + DriveTrainConstants.angleTolerance);
-    }
-    return () ->
-        drivePigeon2.getYaw().getValueAsDouble() < (target - DriveTrainConstants.angleTolerance)
-            || drivePigeon2.getYaw().getValueAsDouble()
-                > (target + DriveTrainConstants.angleTolerance);
+  public Trigger isGyroInRange(double target) {
+    return new Trigger(
+        () ->
+            targetAngle - DriveTrainConstants.angleTolerance < getDriveAngleDeg()
+                && getDriveAngleDeg() < targetAngle + DriveTrainConstants.angleTolerance);
   }
 
   public void setLeftPercent(double percent) {
@@ -144,17 +137,32 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   public Command turnCommand(double deg) {
     targetAngle = getDriveAngleDeg() - deg;
-    SmartDashboard.putNumber("Target Auton Angle", targetAngle);
-    return new PIDCommand(
-            drivePIDController,
-            () -> getDriveAngleDeg(),
-            targetAngle,
-            (output) -> {
-              setLeftPercent(-output);
-              setRightPercent(output);
-            },
-            this)
-        .onlyWhile(isGyroNotInRange(targetAngle));
+
+    return Commands.sequence(
+            runOnce(
+                () -> {
+                  targetAngle = getDriveAngleDeg() - deg;
+                }),
+            new PIDCommand(
+                drivePIDController,
+                () -> getDriveAngleDeg(),
+                () -> {
+                  return targetAngle;
+                },
+                (output) -> {
+                  SmartDashboard.putNumber("PID Output", output);
+                  if (Math.abs(output) < 0.3 && Math.abs(output) > 0.025) {
+                    output = Math.copySign(0.3, output);
+                    setLeftPercent(-output);
+                    setRightPercent(output);
+                  } else {
+                    setLeftPercent(-output);
+                    setRightPercent(output);
+                  }
+                },
+                this))
+        .until(isGyroInRange(targetAngle).debounce(1))
+        .withName("Turn Command");
   }
 
   /**
@@ -175,6 +183,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Drive Right Motor 2", rightDriveMotor2.getMotorOutputPercent());
 
     SmartDashboard.putNumber("Pigeon Yaw", getDriveAngleDeg());
+    SmartDashboard.putNumber("Target Angle Auto", targetAngle);
+    SmartDashboard.putString(
+        "DriveCommand", getCurrentCommand() != null ? getCurrentCommand().getName() : "No Command");
   }
 
   @Override

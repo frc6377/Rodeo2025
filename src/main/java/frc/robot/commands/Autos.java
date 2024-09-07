@@ -33,10 +33,9 @@ public final class Autos {
   // works
   // So negative numbers will be forwards, and positive will be backwards.
   public static Command AutoTurn90Test(DriveTrainSubsystem driveTrainSubsystem) {
-    return Commands.sequence(
-            driveTrainSubsystem.turnCommand(90),
-            Commands.waitSeconds(2),
-            driveTrainSubsystem.turnCommand(0))
+    return Commands.sequence(driveTrainSubsystem.turnCommand(90))
+        // Commands.waitSeconds(2),
+        // driveTrainSubsystem.turnCommand(0))
         .withName("AutoTurn90Test");
   }
 
