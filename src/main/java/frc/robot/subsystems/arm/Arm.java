@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.MotorIDs;
+import frc.robot.Constants.MotorIDs;  
 import java.util.function.DoubleSupplier;
 import frc.robot.Constants.PivotRange;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -21,7 +21,7 @@ public class Arm extends SubsystemBase {
   private double kP = 0.1; // Proportional gain
   private double kI = 0.0; // Integral gain
   private double kD = 0.0; // Derivative gain
-  private double kF = 0.0; // Feedforward gain
+  private double kF = 1; // Feedforward gain
   private double dt = 0.05; // Time in seconds between each update
   private double minAngle = PivotRange.PivotMotorMin;
   private double maxAngle = PivotRange.PivotMotorMax;

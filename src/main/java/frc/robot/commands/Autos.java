@@ -15,7 +15,8 @@ public final class Autos {
     Drivetrain drivetrain,
     Arm arm
   ) {
-    return Commands.sequence(drivetrain.goForwardCommand(5,2))
+    return Commands.sequence(drivetrain.goForwardCommand(5,2),
+    drivetrain.turnCommand(-1, 2))
     .withName("withBeakerCommand");
   }
 
