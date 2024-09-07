@@ -38,10 +38,10 @@ public class Drivetrain extends SubsystemBase {
         () -> {
           double left = 0;
           double right = 0;
-          left = forward.getAsDouble()*DrivetrainConstants.maxSpeed;
-          right = forward.getAsDouble()*DrivetrainConstants.maxSpeed;
-          left -= rotation.getAsDouble()*DrivetrainConstants.maxAngularSpeed;
-          right += rotation.getAsDouble()*DrivetrainConstants.maxAngularSpeed;
+          left = forward.getAsDouble() * DrivetrainConstants.maxSpeed;
+          right = forward.getAsDouble() * DrivetrainConstants.maxSpeed;
+          left -= rotation.getAsDouble() * DrivetrainConstants.maxAngularSpeed;
+          right += rotation.getAsDouble() * DrivetrainConstants.maxAngularSpeed;
           leftDriveTalon.set(ControlMode.PercentOutput, left);
           rightDriveTalon.set(ControlMode.PercentOutput, right);
         });
