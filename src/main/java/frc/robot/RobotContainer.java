@@ -48,7 +48,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         drivetrain.driveCommand(m_driverController::getLeftY, m_driverController::getRightX));
     arm.setDefaultCommand(
-        arm.setTargetAngle(m_driverController::getLeftTriggerAxis,m_driverController::getRightTriggerAxis));
+        arm.setTargetAngle(
+            m_driverController::getLeftTriggerAxis, m_driverController::getRightTriggerAxis));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
   }
@@ -60,11 +61,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-        // Create commands for different actions
-    
+    // Create commands for different actions
 
     // Create a command group to sequence the actions
-
 
     return Autos.withBeakerCommand(drivetrain, arm);
   }
