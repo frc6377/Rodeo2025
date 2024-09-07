@@ -17,9 +17,14 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public static class PivotRange {
+  public static class PivotConstants {
     public static final int PivotMotorMin = 0;
     public static final int PivotMotorMax = 0;
+    public static final double kP = 0.1; // Proportional gain
+    public static final double kI = 0.0; // Integral gain
+    public static final double kD = 0.0; // Derivative gain
+    public static final double kF = 1; // Feedforward gain
+    public static final double initalAngle = 20; // Initial angle of the arm
   }
 
   public static class MotorIDs {

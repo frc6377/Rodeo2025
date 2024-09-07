@@ -11,32 +11,31 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;  
 import java.util.function.DoubleSupplier;
-import frc.robot.Constants.PivotRange;
+import frc.robot.Constants.PivotConstants;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private final TalonSRX pivotMotor;
-  private double targetAngle = 0;
-  private double kP = 0.1; // Proportional gain
-  private double kI = 0.0; // Integral gain
-  private double kD = 0.0; // Derivative gain
-  private double kF = 1; // Feedforward gain
+  private double targetAngle = PivotConstants.initalAngle;
+  private double kP = PivotConstants.kP; // Proportional gain
+  private double kI = PivotConstants.kI; // Integral gain
+  private double kD = PivotConstants.kD; // Derivative gain
+  private double kF = PivotConstants.kF; // Feedforward gain
   private double dt = 0.05; // Time in seconds between each update
-  private double minAngle = PivotRange.PivotMotorMin;
-  private double maxAngle = PivotRange.PivotMotorMax;
+  private double minAngle = PivotConstants.PivotMotorMin;
+  private double maxAngle = PivotConstants.PivotMotorMax;
 
   public Arm() {
-    pivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
-    pivotMotor.configFactoryDefault();
-        pivotMotor.setNeutralMode(NeutralMode.Brake);
-        pivotMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-        pivotMotor.config_kP(0, kP);
-        pivotMotor.config_kI(0, kI);
-        pivotMotor.config_kD(0, kD);
-        pivotMotor.config_kF(0, kF);
+      pivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
+      pivotMotor.configFactoryDefault();
+      pivotMotor.setNeutralMode(NeutralMode.Brake);
+      pivotMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+      pivotMotor.config_kP(0, kP);
+      pivotMotor.config_kI(0, kI);
+      pivotMotor.config_kD(0, kD);
+      pivotMotor.config_kF(0, kF);
 
-        // Configure follower Talon
     }
     public double getCurrentAngle() {
       return pivotMotor.getSelectedSensorPosition(0);
