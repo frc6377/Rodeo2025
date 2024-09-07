@@ -38,14 +38,14 @@ public final class Constants {
 
   public static class DriveTrainConstants {
     // Sum of these value should be <= 1 (can be over, would not cause problems)
-    public static final HowdyPID drivePID = new HowdyPID(0.01, 0.0, 0.0);
+    public static final HowdyPID drivePID = new HowdyPID(0.02, 0.002, 0.0);
 
     public static final double minTurnSpeed = 0.1;
 
     public static final double maxDrivePercent = 0.5;
     public static final double maxTurnPercent = 0.5;
 
-    public static final double angleTolerance = 5;
+    public static final double angleTolerance = 1;
   }
 
   public static class ArmConstants {
@@ -78,7 +78,7 @@ public final class Constants {
 
   public static class EffectorConstants {
     public static final double intakePercent = 0.25;
-    public static final double outtakePercent = 0.25;
+    public static final double outtakePercent = -0.25;
 
     public static final boolean isBackUp = false;
     public static final HowdyPID wristPID = new HowdyPID(0.1, 0.0, 0.0);

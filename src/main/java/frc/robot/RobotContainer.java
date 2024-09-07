@@ -94,20 +94,13 @@ public class RobotContainer {
         m_driverController.leftBumper().whileTrue(m_EffectorSubsystem.scoreHighCommand());
         m_driverController.rightBumper().whileTrue(m_EffectorSubsystem.scoreLowCommand());
       } else {
-        m_driverController.leftBumper().whileTrue(m_ArmSubsystem.scoreHighCommand());
-        m_driverController.rightBumper().whileTrue(m_ArmSubsystem.scoreLowCommand());
+        m_driverController.x().whileTrue(m_ArmSubsystem.scoreHighCommand());
+        m_driverController.a().whileTrue(m_ArmSubsystem.scoreLowCommand());
       }
     }
 
-    // Operator Controls
-    m_operatorController
-        .povUp()
-        .whileTrue(m_EffectorSubsystem.intakeCommand())
-        .onFalse(m_EffectorSubsystem.stopCommand());
-    m_operatorController
-        .povDown()
-        .whileTrue(m_EffectorSubsystem.outakeCommand())
-        .onFalse(m_EffectorSubsystem.stopCommand());
+    m_driverController.leftTrigger().whileTrue(m_EffectorSubsystem.intakeCommand());
+    m_driverController.rightTrigger().whileTrue(m_EffectorSubsystem.outakeCommand());
   }
 
   /**

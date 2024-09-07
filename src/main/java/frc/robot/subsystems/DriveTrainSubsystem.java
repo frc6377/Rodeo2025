@@ -10,7 +10,6 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
@@ -103,11 +102,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveMotor1.set(ControlMode.PercentOutput, percent);
   }
 
-  public double getDriveAngle() {
+  public double getDriveAngleDeg() {
     if (Robot.isSimulation()) {
       return m_differentialDrivetrainSim.getPose().getRotation().getDegrees();
     } else {
-      return Units.radiansToDegrees(drivePigeon2.getAccumGyroY().getValueAsDouble());
+      return drivePigeon2.getYaw().getValueAsDouble();
     }
   }
 
@@ -144,11 +143,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public Command turnCommand(double deg) {
-    targetAngle = getDriveAngle() - deg;
+    targetAngle = getDriveAngleDeg() - deg;
     SmartDashboard.putNumber("Target Auton Angle", targetAngle);
     return new PIDCommand(
             drivePIDController,
-            () -> getDriveAngle(),
+            () -> getDriveAngleDeg(),
             targetAngle,
             (output) -> {
               setLeftPercent(-output);
@@ -175,7 +174,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Drive Right Motor 1", rightDriveMotor1.getMotorOutputPercent());
     SmartDashboard.putNumber("Drive Right Motor 2", rightDriveMotor2.getMotorOutputPercent());
 
-    SmartDashboard.putNumber("Pigeon Yaw", getDriveAngle());
+    SmartDashboard.putNumber("Pigeon Yaw", getDriveAngleDeg());
   }
 
   @Override
