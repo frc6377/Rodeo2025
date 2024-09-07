@@ -23,4 +23,9 @@ public final class Constants {
     public static final int rightDriveVictorID = 19;
     public static final int rightDriveTalonID = 4;
   }
+
+  public static class DrivetrainConstants {
+    public static final double maxSpeed = 0.5;
+    public static final double maxAngularSpeed = 0.5;
+  }
 }

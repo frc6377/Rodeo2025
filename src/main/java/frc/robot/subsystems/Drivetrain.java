@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.MotorIDs;
 import java.util.function.DoubleSupplier;
 
@@ -37,12 +38,10 @@ public class Drivetrain extends SubsystemBase {
         () -> {
           double left = 0;
           double right = 0;
-          left = forward.getAsDouble();
-          right = forward.getAsDouble();
-          left -= rotation.getAsDouble();
-          right += rotation.getAsDouble();
-          left /= 2;
-          right /= 2;
+          left = forward.getAsDouble() * DrivetrainConstants.maxSpeed;
+          right = forward.getAsDouble() * DrivetrainConstants.maxSpeed;
+          left -= rotation.getAsDouble() * DrivetrainConstants.maxAngularSpeed;
+          right += rotation.getAsDouble() * DrivetrainConstants.maxAngularSpeed;
           leftDriveTalon.set(ControlMode.PercentOutput, left);
           rightDriveTalon.set(ControlMode.PercentOutput, right);
         });
