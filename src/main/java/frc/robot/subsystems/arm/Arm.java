@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
@@ -18,6 +19,7 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private final TalonSRX pivotMotor;
 
+  private final Encoder pivotEncoder;
   private double targetAngle = PivotConstants.initalAngle;
   private final double kP = PivotConstants.kP; // Proportional gain
   private final double kI = PivotConstants.kI; // Integral gain
@@ -28,14 +30,17 @@ public class Arm extends SubsystemBase {
   private PIDController pidController = new PIDController(kP, kI, kD);
 
   public Arm() {
+    pivotEncoder = new Encoder(0, 1);
     pivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
     pivotMotor.configFactoryDefault();
     pivotMotor.setNeutralMode(NeutralMode.Brake);
+    pivotEncoder.reset();
+    pivotEncoder.setDistancePerPulse(1);
   }
 
   public double getCurrentAngle() {
     // Placeholder for actual sensor FIXME!!
-    return pivotMotor.getSelectedSensorPosition(0);
+    return pivotEncoder.getDistance();
   }
 
   public Command setTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
