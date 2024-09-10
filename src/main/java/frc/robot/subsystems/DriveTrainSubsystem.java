@@ -151,8 +151,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 },
                 (output) -> {
                   SmartDashboard.putNumber("PID Output", output);
-                  if (Math.abs(output) < 0.3 && Math.abs(output) > 0.025) {
-                    output = Math.copySign(0.3, output);
+                  if (Math.abs(output) < DriveTrainConstants.minPower && Math.abs(output) > 0.025) {
+                    output = Math.copySign(DriveTrainConstants.minPower, output);
                     setLeftPercent(-output);
                     setRightPercent(output);
                   } else {
@@ -161,7 +161,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                   }
                 },
                 this))
-        .until(isGyroInRange(targetAngle).debounce(1))
+        .until(isGyroInRange(targetAngle).debounce(DriveTrainConstants.debounce))
         .withName("Turn Command");
   }
 
