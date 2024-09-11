@@ -17,15 +17,23 @@ public final class Autos {
       ArmSubsystem armSubsystem,
       EffectorSubsystem effectorSubsystem) {
     return Commands.sequence(
-            driveSubsystem.setForwardCommand(2, 0.5),
+            driveSubsystem.setForwardCommand(0.8, -0.5),
             // armSubsystem.scoreHighCommand(),
             // effectorSubsystem.outakeCommand(),
-            Commands.waitSeconds(1),
-            driveSubsystem.setForwardCommand(2, -0.5),
-            Commands.waitSeconds(1),
+            Commands.waitSeconds(2),
+            driveSubsystem.setForwardCommand(0.6, 0.5),
+            Commands.waitSeconds(2),
             driveSubsystem.turnCommand(90),
-            AutoForwardTest(driveSubsystem))
+            driveSubsystem.setForwardCommand(0.5, -0.5))
         .withName("OneBeackerAuto");
+  }
+
+  public static Command SmashAuto(DriveTrainSubsystem driveSubsystem) {
+    return Commands.sequence(
+            driveSubsystem.setForwardCommand(1.5, 0.5),
+            Commands.waitSeconds(2),
+            driveSubsystem.setForwardCommand(0.6, -0.5))
+        .withName("SmashAuto");
   }
 
   // Commands
