@@ -7,6 +7,8 @@ package frc.robot.subsystems.arm;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,23 +19,26 @@ import java.util.function.DoubleSupplier;
 
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
-  private final TalonSRX pivotMotor;
-
+  private final TalonSRX masterPivotMotor;
+  private final TalonSRX slavePivotMotor;
   private final Encoder pivotEncoder;
   private double targetAngle = PivotConstants.initalAngle;
-  private final double kP = PivotConstants.kP; // Proportional gain
-  private final double kI = PivotConstants.kI; // Integral gain
-  private final double kD = PivotConstants.kD; // Derivative gain
-  private final double kF = PivotConstants.kF; // Feedforward gain
+  private double speed = 0;
   private final double minAngle = PivotConstants.PivotMotorMin;
   private final double maxAngle = PivotConstants.PivotMotorMax;
-  private PIDController pidController = new PIDController(kP, kI, kD);
-
+  private PIDController pidController = new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
+  private ArmFeedforward armFeedforward = new ArmFeedforward(PivotConstants.kS,PivotConstants.kG, PivotConstants.kV,PivotConstants.kA);
   public Arm() {
     pivotEncoder = new Encoder(0, 1);
-    pivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
-    pivotMotor.configFactoryDefault();
-    pivotMotor.setNeutralMode(NeutralMode.Brake);
+    masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
+    masterPivotMotor.configFactoryDefault();
+    masterPivotMotor.setNeutralMode(NeutralMode.Brake);
+    slavePivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
+    slavePivotMotor.configFactoryDefault();
+    slavePivotMotor.setNeutralMode(NeutralMode.Brake);
+    slavePivotMotor.setInverted(true);
+    slavePivotMotor.follow(masterPivotMotor);
+
     pivotEncoder.reset();
     pivotEncoder.setDistancePerPulse(1);
   }
@@ -55,11 +60,10 @@ public class Arm extends SubsystemBase {
 
   public void update() {
     double currentAngle = getCurrentAngle();
-
-    double feedforward = kF * targetAngle; // Calculate feedforward based on target angle
+    double feedforward = armFeedforward.calculate(currentAngle, speed); // Calculate feedforward
     double pidOutput = pidController.calculate(currentAngle, targetAngle); // Calculate PID output
-
-    pivotMotor.set(ControlMode.PercentOutput, feedforward + pidOutput);
+    speed = feedforward + pidOutput;
+    masterPivotMotor.set(ControlMode.PercentOutput, feedforward + pidOutput);
   }
 
   @Override

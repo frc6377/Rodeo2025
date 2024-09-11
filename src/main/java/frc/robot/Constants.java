@@ -23,7 +23,10 @@ public final class Constants {
     public static final double kP = 0.1; // Proportional gain
     public static final double kI = 0.0; // Integral gain
     public static final double kD = 0.0; // Derivative gain
-    public static final double kF = 1; // Feedforward gain
+    public static final double kS = 0.5; // Static gain
+    public static final double kG = 0.5; // Gravity gain
+    public static final double kV = 2.15; // Velocity gain
+    public static final double kA = 0.04; // Acceleration gain
     public static final double initalAngle = 20; // Initial angle of the arm
   }
 
