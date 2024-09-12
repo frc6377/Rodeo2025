@@ -11,6 +11,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,10 +20,10 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
   private final Drivetrain drivetrain;
   private final Arm arm;
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  // Replace with CommandPS4Controller or CommandJoystick if needed\
+
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
@@ -44,14 +45,15 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.povUp().whileTrue(m_IntakeSubsystem.intake());
+    m_driverController.povDown().whileTrue(m_IntakeSubsystem.outtake());
+
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     drivetrain.setDefaultCommand(
         drivetrain.driveCommand(m_driverController::getLeftY, m_driverController::getRightX));
     arm.setDefaultCommand(
         arm.setTargetAngle(
             m_driverController::getLeftTriggerAxis, m_driverController::getRightTriggerAxis));
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
   }
 
   /**
@@ -60,11 +62,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // Create commands for different actions
-
-    // Create a command group to sequence the actions
-
     return Autos.withBeakerCommand(drivetrain, arm);
   }
 }
