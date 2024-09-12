@@ -7,7 +7,6 @@ package frc.robot.subsystems.arm;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,14 +19,19 @@ import java.util.function.DoubleSupplier;
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private final TalonSRX masterPivotMotor;
+
   private final TalonSRX slavePivotMotor;
   private final Encoder pivotEncoder;
   private double targetAngle = PivotConstants.initalAngle;
   private double speed = 0;
   private final double minAngle = PivotConstants.PivotMotorMin;
   private final double maxAngle = PivotConstants.PivotMotorMax;
-  private PIDController pidController = new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
-  private ArmFeedforward armFeedforward = new ArmFeedforward(PivotConstants.kS,PivotConstants.kG, PivotConstants.kV,PivotConstants.kA);
+  private PIDController pidController =
+      new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
+  private ArmFeedforward armFeedforward =
+      new ArmFeedforward(
+          PivotConstants.kS, PivotConstants.kG, PivotConstants.kV, PivotConstants.kA);
+
   public Arm() {
     pivotEncoder = new Encoder(0, 1);
     masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);

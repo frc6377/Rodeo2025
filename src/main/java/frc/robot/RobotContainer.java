@@ -11,7 +11,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.intake.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,6 +22,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class RobotContainer {
   private final Drivetrain drivetrain;
   private final Arm arm;
+  private final Intake m_IntakeSubsystem = new Intake();
   // Replace with CommandPS4Controller or CommandJoystick if needed\
 
   private final CommandXboxController m_driverController =

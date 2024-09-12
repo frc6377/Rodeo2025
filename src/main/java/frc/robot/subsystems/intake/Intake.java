@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -10,15 +10,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 
-public class IntakeSubsystem extends SubsystemBase {
-  private final TalonSRX leftArmMotor;
-  private final TalonSRX rightArmMotor;
+public class Intake extends SubsystemBase {
+  private final TalonSRX leftIntakeArmMotor;
+  private final TalonSRX rightIntakeArmMotor;
 
-  public IntakeSubsystem() {
-    leftArmMotor = new TalonSRX(MotorIDs.leftArmMotor);
-
-    rightArmMotor = new TalonSRX(MotorIDs.rightArmMotor);
-    rightArmMotor.setInverted(true);
+  public Intake() {
+    leftIntakeArmMotor = new TalonSRX(MotorIDs.leftIntakeArmMotor);
+    rightIntakeArmMotor = new TalonSRX(MotorIDs.rightIntakeArmMotor);
+    rightIntakeArmMotor.setInverted(true);
   }
 
   /**
@@ -29,12 +28,12 @@ public class IntakeSubsystem extends SubsystemBase {
   public Command intake() {
     return startEnd(
         () -> {
-          leftArmMotor.set(ControlMode.PercentOutput, 1);
-          rightArmMotor.set(ControlMode.PercentOutput, 1);
+          leftIntakeArmMotor.set(ControlMode.PercentOutput, 1);
+          rightIntakeArmMotor.set(ControlMode.PercentOutput, 1);
         },
         () -> {
-          leftArmMotor.set(ControlMode.PercentOutput, 0);
-          rightArmMotor.set(ControlMode.PercentOutput, 0);
+          leftIntakeArmMotor.set(ControlMode.PercentOutput, 0);
+          rightIntakeArmMotor.set(ControlMode.PercentOutput, 0);
         });
 
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
@@ -44,12 +43,12 @@ public class IntakeSubsystem extends SubsystemBase {
   public Command outtake() {
     return startEnd(
         () -> {
-          leftArmMotor.set(ControlMode.PercentOutput, -1);
-          rightArmMotor.set(ControlMode.PercentOutput, -1);
+          leftIntakeArmMotor.set(ControlMode.PercentOutput, -1);
+          rightIntakeArmMotor.set(ControlMode.PercentOutput, -1);
         },
         () -> {
-          leftArmMotor.set(ControlMode.PercentOutput, 0);
-          rightArmMotor.set(ControlMode.PercentOutput, 0);
+          leftIntakeArmMotor.set(ControlMode.PercentOutput, 0);
+          rightIntakeArmMotor.set(ControlMode.PercentOutput, 0);
         });
 
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
