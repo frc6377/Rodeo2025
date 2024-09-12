@@ -23,15 +23,11 @@ public final class Constants {
 
     public static final int Pigeon2ID = 5;
 
-    public static final int armMotor1 = 6;
-    public static final int armMotor2 = 7;
-    public static final int armEncoder = 8;
+    public static final int intakemotorleft = 6
+    public static final int intakemotorright = 7
 
-    public static final int effectorMotor1 = 9;
-    public static final int effectorMotor2 = 10;
 
-    public static final int wristMotor = 11;
-    public static final int wristEncoder = 12;
+
   }
 
   public static class DriveTrainConstants {
