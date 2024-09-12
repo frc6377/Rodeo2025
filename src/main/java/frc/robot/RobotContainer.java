@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.EffectorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.ArmSubsystem;
@@ -85,21 +84,11 @@ public class RobotContainer {
   private void configureBindings() {
     // Driver Controls
     if (Robot.isSimulation()) {
-      if (EffectorConstants.isBackUp) {
-        m_driverController.button(1).whileTrue(m_EffectorSubsystem.scoreHighCommand());
-        m_driverController.button(2).whileTrue(m_EffectorSubsystem.scoreLowCommand());
-      } else {
-        m_driverController.button(1).whileTrue(m_ArmSubsystem.scoreHighCommand());
-        m_driverController.button(2).whileTrue(m_ArmSubsystem.scoreLowCommand());
-      }
+      m_driverController.button(1).onTrue(m_ArmSubsystem.scoreHighCommand());
+      m_driverController.button(2).onTrue(m_ArmSubsystem.scoreLowCommand());
     } else {
-      if (EffectorConstants.isBackUp) {
-        m_driverController.leftBumper().whileTrue(m_EffectorSubsystem.scoreHighCommand());
-        m_driverController.rightBumper().whileTrue(m_EffectorSubsystem.scoreLowCommand());
-      } else {
-        m_driverController.x().whileTrue(m_ArmSubsystem.scoreHighCommand());
-        m_driverController.a().whileTrue(m_ArmSubsystem.scoreLowCommand());
-      }
+      m_driverController.x().onTrue(m_ArmSubsystem.scoreHighCommand());
+      m_driverController.a().onTrue(m_ArmSubsystem.scoreLowCommand());
     }
 
     m_driverController.leftTrigger().whileTrue(m_EffectorSubsystem.intakeCommand());

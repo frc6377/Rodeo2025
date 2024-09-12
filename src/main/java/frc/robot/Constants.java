@@ -52,7 +52,7 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    public static final HowdyPID armPID = new HowdyPID(2, 0.0, 0.0);
+    public static final HowdyPID armPID = new HowdyPID(7.5, 0, 1);
 
     public static final double kS = 0;
     public static final double kG = 0.14; // 0.55

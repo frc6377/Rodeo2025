@@ -120,13 +120,14 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public Command setArmPosition(double position) {
-    SmartDashboard.putNumber("Arm Target", Units.radiansToDegrees(position));
     return new PIDCommand(
         armPIDController,
         () -> getArmPoseRads(),
         position,
-        (output) -> setArmMotors(output + calcArmFeedforward()),
-        // (output) -> setArmMotors(calcArmFeedforward()),
+        (output) -> {
+          SmartDashboard.putNumber("Arm Target", Units.radiansToDegrees(position));
+          setArmMotors(output + calcArmFeedforward());
+        },
         this);
   }
 
