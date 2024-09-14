@@ -40,7 +40,7 @@ public final class Constants {
     public static final int rightDriveTalonID = 4;
     public static final int pivotMotorMasterID = 7;
     public static final int pivotMotorSlaveID = 5;
-    public static final int leftIntakeArmMotor = 0;
+    public static final int IntakeMotor = 0;
     public static final int rightIntakeArmMotor = 0;
   }
 }

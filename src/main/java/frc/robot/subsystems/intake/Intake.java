@@ -11,13 +11,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 
 public class Intake extends SubsystemBase {
-  private final TalonSRX leftIntakeArmMotor;
-  private final TalonSRX rightIntakeArmMotor;
+  private final TalonSRX IntakeMotor;
 
   public Intake() {
-    leftIntakeArmMotor = new TalonSRX(MotorIDs.leftIntakeArmMotor);
-    rightIntakeArmMotor = new TalonSRX(MotorIDs.rightIntakeArmMotor);
-    rightIntakeArmMotor.setInverted(true);
+    IntakeMotor = new TalonSRX(MotorIDs.IntakeMotor);
   }
 
   /**
@@ -28,12 +25,10 @@ public class Intake extends SubsystemBase {
   public Command intakeBeaker() {
     return startEnd(
         () -> {
-          leftIntakeArmMotor.set(ControlMode.PercentOutput, 1);
-          rightIntakeArmMotor.set(ControlMode.PercentOutput, 1);
+          IntakeMotor.set(ControlMode.PercentOutput, 1);
         },
         () -> {
-          leftIntakeArmMotor.set(ControlMode.PercentOutput, 0);
-          rightIntakeArmMotor.set(ControlMode.PercentOutput, 0);
+          IntakeMotor.set(ControlMode.PercentOutput, 0);
         });
 
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
@@ -43,12 +38,10 @@ public class Intake extends SubsystemBase {
   public Command outtakeBeaker() {
     return startEnd(
         () -> {
-          leftIntakeArmMotor.set(ControlMode.PercentOutput, -1);
-          rightIntakeArmMotor.set(ControlMode.PercentOutput, -1);
+          IntakeMotor.set(ControlMode.PercentOutput, -1);
         },
         () -> {
-          leftIntakeArmMotor.set(ControlMode.PercentOutput, 0);
-          rightIntakeArmMotor.set(ControlMode.PercentOutput, 0);
+          IntakeMotor.set(ControlMode.PercentOutput, 0);
         });
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
 
