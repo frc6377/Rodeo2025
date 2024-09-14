@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
@@ -64,10 +65,10 @@ public class Arm extends SubsystemBase {
 
   public void update() {
     double currentAngle = getCurrentAngle();
-    double feedforward = armFeedforward.calculate(currentAngle, speed); // Calculate feedforward
+    double feedforward = armFeedforward.calculate(currentAngle, 0); // Calculate feedforward
     double pidOutput = pidController.calculate(currentAngle, targetAngle); // Calculate PID output
     speed = feedforward + pidOutput;
-    masterPivotMotor.set(ControlMode.PercentOutput, feedforward + pidOutput);
+    masterPivotMotor.set(ControlMode.PercentOutput, feedforward/RobotController.getBatteryVoltage() + pidOutput);
   }
 
   @Override

@@ -12,7 +12,7 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 public final class Autos {
   /** Example static factory for an autonomous command. */
   public static Command withBeakerCommand(Drivetrain drivetrain, Arm arm) {
-    return Commands.sequence(drivetrain.goForwardCommand(5, 2), drivetrain.turnCommand(-1, 2))
+    return Commands.sequence(drivetrain.goForwardCommand(5, 2), drivetrain.turnCommand(-1, 0.5))
         .withName("withBeakerCommand");
   }
 

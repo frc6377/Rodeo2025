@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
    *
    * @return a command
    */
-  public Command intake() {
+  public Command intakeBeaker() {
     return startEnd(
         () -> {
           leftIntakeArmMotor.set(ControlMode.PercentOutput, 1);
@@ -40,8 +40,10 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public Command outtake() {
-    return startEnd(
+  public Command outtakeBeaker() {
+    return Command.deadline(
+      Command.waitSeconds(1),
+      runEnd(
         () -> {
           leftIntakeArmMotor.set(ControlMode.PercentOutput, -1);
           rightIntakeArmMotor.set(ControlMode.PercentOutput, -1);
@@ -49,7 +51,8 @@ public class Intake extends SubsystemBase {
         () -> {
           leftIntakeArmMotor.set(ControlMode.PercentOutput, 0);
           rightIntakeArmMotor.set(ControlMode.PercentOutput, 0);
-        });
+        })
+    );
 
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
 

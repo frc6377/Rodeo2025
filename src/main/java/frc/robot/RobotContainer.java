@@ -46,8 +46,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.povUp().whileTrue(m_IntakeSubsystem.intake());
-    m_driverController.povDown().whileTrue(m_IntakeSubsystem.outtake());
+    m_driverController.povUp().whileTrue(m_IntakeSubsystem.intakeBeaker());
+    m_driverController.povDown().whileTrue(m_IntakeSubsystem.outtakeBeaker());
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     drivetrain.setDefaultCommand(
