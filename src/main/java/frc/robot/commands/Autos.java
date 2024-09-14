@@ -14,9 +14,9 @@ public final class Autos {
   /** Example static factory for an autonomous command. */
   public static Command withBeakerCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
     return Commands.sequence(
-            drivetrain.goForwardCommand(5, 2),
-            drivetrain.turnCommand(-1, 0.5),
-            intake.intakeBeaker())
+            arm.scoreHighCommand(),
+            drivetrain.goForwardCommand(1, 2),
+            intake.outtakeBeaker())
         .withName("WithBeakerCommand");
   }
 
