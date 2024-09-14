@@ -28,6 +28,9 @@ public final class Constants {
     public static final double kV = 2.15; // Velocity gain
     public static final double kA = 0.04; // Acceleration gain
     public static final double initalAngle = 20; // Initial angle of the arm
+    public static final double scoreHighAngle = 90; // Angle to score high
+    public static final double scoreLowAngle = 45; // Angle to score low
+    public static final double pickUpBeakerAngle = 20; // Angle to intake
   }
 
   public static class MotorIDs {

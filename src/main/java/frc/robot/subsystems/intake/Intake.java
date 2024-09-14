@@ -7,6 +7,7 @@ package frc.robot.subsystems.intake;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 
@@ -41,18 +42,17 @@ public class Intake extends SubsystemBase {
   }
 
   public Command outtakeBeaker() {
-    return Command.deadline(
-      Command.waitSeconds(1),
-      runEnd(
-        () -> {
-          leftIntakeArmMotor.set(ControlMode.PercentOutput, -1);
-          rightIntakeArmMotor.set(ControlMode.PercentOutput, -1);
-        },
-        () -> {
-          leftIntakeArmMotor.set(ControlMode.PercentOutput, 0);
-          rightIntakeArmMotor.set(ControlMode.PercentOutput, 0);
-        })
-    );
+    return Commands.deadline(
+        Commands.waitSeconds(1),
+        runEnd(
+            () -> {
+              leftIntakeArmMotor.set(ControlMode.PercentOutput, -1);
+              rightIntakeArmMotor.set(ControlMode.PercentOutput, -1);
+            },
+            () -> {
+              leftIntakeArmMotor.set(ControlMode.PercentOutput, 0);
+              rightIntakeArmMotor.set(ControlMode.PercentOutput, 0);
+            }));
 
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
 
