@@ -38,10 +38,6 @@ public class Arm extends SubsystemBase {
   private DebugEntry<Double> m_kP;
   private DebugEntry<Double> m_kI;
   private DebugEntry<Double> m_kD;
-  private DebugEntry<Double> m_kS;
-  private DebugEntry<Double> m_kG;
-  private DebugEntry<Double> m_kV;
-  private DebugEntry<Double> m_kA;
 
   public Arm() {
     pivotEncoder = new DutyCycleEncoder(0);
@@ -59,10 +55,6 @@ public class Arm extends SubsystemBase {
     m_kP = new DebugEntry<>(PivotConstants.kP, "kP", this);
     m_kI = new DebugEntry<>(PivotConstants.kI, "kI", this);
     m_kD = new DebugEntry<>(PivotConstants.kD, "kD", this);
-    m_kS = new DebugEntry<>(PivotConstants.kS, "kS", this);
-    m_kG = new DebugEntry<>(PivotConstants.kG, "kG", this);
-    m_kV = new DebugEntry<>(PivotConstants.kV, "kV", this);
-    m_kA = new DebugEntry<>(PivotConstants.kA, "kA", this);
   }
 
   public double getCurrentAngle() {
@@ -125,12 +117,6 @@ public class Arm extends SubsystemBase {
     m_kP.log(pidController.getP());
     m_kI.log(pidController.getI());
     m_kD.log(pidController.getD());
-    m_kS.log(m_kS.get());
-    m_kG.log(m_kG.get());
-    m_kV.log(m_kV.get());
-    m_kA.log(m_kA.get());
-
-    armFeedForward = new ArmFeedforward(m_kS.get(), m_kG.get(), m_kV.get(), m_kA.get());
 
     pidController.setP(m_kP.get());
     pidController.setI(m_kI.get());
