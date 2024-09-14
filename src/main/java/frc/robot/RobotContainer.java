@@ -47,15 +47,16 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.povUp().whileTrue(m_IntakeSubsystem.intakeBeaker());
-    m_driverController.povDown().whileTrue(m_IntakeSubsystem.outtakeBeaker());
-
+    m_driverController.leftBumper().whileTrue(m_IntakeSubsystem.intakeBeaker());
+    m_driverController.rightBumper().whileTrue(m_IntakeSubsystem.outtakeBeaker());
+    m_driverController.y().whileTrue(m_ArmSubsystem.scoreHighCommand());
+    m_driverController.b().whileTrue(m_ArmSubsystem.scoreLowCommand());
+    m_driverController.a().whileTrue(m_ArmSubsystem.pickUpBeakerCommand());
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     m_DrivetrainSubsystem.setDefaultCommand(
         m_DrivetrainSubsystem.driveCommand(
             m_driverController::getLeftY, m_driverController::getRightX));
-    m_ArmSubsystem.setDefaultCommand(
-        m_ArmSubsystem.changeTargetAngle(
+    m_ArmSubsystem.setDefaultCommand(m_ArmSubsystem.changeTargetAngle(
             m_driverController::getLeftTriggerAxis, m_driverController::getRightTriggerAxis));
   }
 

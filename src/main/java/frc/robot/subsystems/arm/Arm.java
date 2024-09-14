@@ -23,7 +23,6 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private final TalonSRX masterPivotMotor;
 
-  private double speed;
   private final TalonSRX slavePivotMotor;
   private final DutyCycleEncoder pivotEncoder;
   private double targetAngle = PivotConstants.initalAngle;
@@ -41,10 +40,11 @@ public class Arm extends SubsystemBase {
 
   public Arm() {
     pivotEncoder = new DutyCycleEncoder(0);
-    masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
+    pivotEncoder.setDistancePerRotation(360.0);
+    masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorMasterID);
     masterPivotMotor.configFactoryDefault();
     masterPivotMotor.setNeutralMode(NeutralMode.Brake);
-    slavePivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
+    slavePivotMotor = new TalonSRX(MotorIDs.pivotMotorSlaveID);
     slavePivotMotor.configFactoryDefault();
     slavePivotMotor.setNeutralMode(NeutralMode.Brake);
     slavePivotMotor.setInverted(true);
@@ -59,14 +59,14 @@ public class Arm extends SubsystemBase {
 
   public double getCurrentAngle() {
     // Placeholder for actual sensor FIXME!!
-    return pivotEncoder.get();
+    return (pivotEncoder.get()%1)*360;
   }
 
   public Command changeTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
     return run(
         () -> {
           double angle =
-              ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 2) + getCurrentAngle();
+              ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 2) + targetAngle;
           targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
           update();
         });
@@ -76,6 +76,7 @@ public class Arm extends SubsystemBase {
     return run(
         () -> {
           targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+          update();
         });
   }
 
@@ -103,13 +104,19 @@ public class Arm extends SubsystemBase {
         });
   }
 
-  public void update() {
+  private void update() {
     double currentAngle = getCurrentAngle();
     double feedforward = armFeedForward.calculate(currentAngle, 0); // Calculate feedforward
     double pidOutput = pidController.calculate(currentAngle, targetAngle); // Calculate PID output
-    speed = feedforward + pidOutput;
     masterPivotMotor.set(
         ControlMode.PercentOutput, feedforward / RobotController.getBatteryVoltage() + pidOutput);
+  }
+
+  public Command runRaw(double speed) {
+    return run(
+        () -> {
+          masterPivotMotor.set(ControlMode.PercentOutput, speed);
+        });
   }
 
   @Override
