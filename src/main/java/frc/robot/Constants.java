@@ -24,6 +24,9 @@ public final class Constants {
   public static class ArmConstants {
     public static final double scoreAngle = 135.0;
     public static final double stowedAngle = 30.0;
+    public static final double kArmP = 1.0;
+    public static final double kArmI = 0.0;
+    public static final double kArmD = 0.0;
     public static final double kArmG = 0.56;
     public static final double kArmV = 2.15;
     public static final double kArmA = 0.03;
