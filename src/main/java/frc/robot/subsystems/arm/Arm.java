@@ -9,8 +9,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
@@ -22,10 +23,10 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private final TalonSRX masterPivotMotor;
 
+  private double speed;
   private final TalonSRX slavePivotMotor;
-  private final Encoder pivotEncoder;
+  private final DutyCycleEncoder pivotEncoder;
   private double targetAngle = PivotConstants.initalAngle;
-  private double speed = 0;
   private final double minAngle = PivotConstants.PivotMotorMin;
   private final double maxAngle = PivotConstants.PivotMotorMax;
   private PIDController pidController =
@@ -43,7 +44,7 @@ public class Arm extends SubsystemBase {
   private DebugEntry<Double> m_kA;
 
   public Arm() {
-    pivotEncoder = new Encoder(0, 1);
+    pivotEncoder = new DutyCycleEncoder(0);
     masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorTalonID);
     masterPivotMotor.configFactoryDefault();
     masterPivotMotor.setNeutralMode(NeutralMode.Brake);
@@ -54,7 +55,6 @@ public class Arm extends SubsystemBase {
     slavePivotMotor.follow(masterPivotMotor);
 
     pivotEncoder.reset();
-    pivotEncoder.setDistancePerPulse(1);
 
     m_kP = new DebugEntry<>(PivotConstants.kP, "kP", this);
     m_kI = new DebugEntry<>(PivotConstants.kI, "kI", this);
@@ -67,15 +67,46 @@ public class Arm extends SubsystemBase {
 
   public double getCurrentAngle() {
     // Placeholder for actual sensor FIXME!!
-    return pivotEncoder.getDistance();
+    return pivotEncoder.get();
   }
 
-  public Command setTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
+  public Command changeTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
     return run(
         () -> {
           double angle =
               ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 2) + getCurrentAngle();
           targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+          update();
+        });
+  }
+
+  public Command goToAngle(double angle) {
+    return run(
+        () -> {
+          targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+        });
+  }
+
+  public Command scoreHighCommand() {
+    return run(
+        () -> {
+          targetAngle = PivotConstants.scoreHighAngle;
+          update();
+        });
+  }
+
+  public Command scoreLowCommand() {
+    return run(
+        () -> {
+          targetAngle = PivotConstants.scoreLowAngle;
+          update();
+        });
+  }
+
+  public Command pickUpBeakerCommand() {
+    return run(
+        () -> {
+          targetAngle = PivotConstants.pickUpBeakerAngle;
           update();
         });
   }
@@ -104,5 +135,6 @@ public class Arm extends SubsystemBase {
     pidController.setP(m_kP.get());
     pidController.setI(m_kI.get());
     pidController.setD(m_kD.get());
+    SmartDashboard.putNumber("Current Angle", getCurrentAngle());
   }
 }
