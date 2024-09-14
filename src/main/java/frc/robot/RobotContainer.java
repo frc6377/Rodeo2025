@@ -20,9 +20,9 @@ import frc.robot.subsystems.intake.Intake;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private final Drivetrain drivetrain;
-  private final Arm arm;
-  private final Intake m_IntakeSubsystem = new Intake();
+  private final Drivetrain m_DrivetrainSubsystem;
+  private final Arm m_ArmSubsystem;
+  private final Intake m_IntakeSubsystem;
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   private final CommandXboxController m_driverController =
@@ -31,8 +31,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    drivetrain = new Drivetrain();
-    arm = new Arm();
+    m_DrivetrainSubsystem = new Drivetrain();
+    m_ArmSubsystem = new Arm();
+    m_IntakeSubsystem = new Intake();
     configureBindings();
   }
 
@@ -50,10 +51,11 @@ public class RobotContainer {
     m_driverController.povDown().whileTrue(m_IntakeSubsystem.outtakeBeaker());
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    drivetrain.setDefaultCommand(
-        drivetrain.driveCommand(m_driverController::getLeftY, m_driverController::getRightX));
-    arm.setDefaultCommand(
-        arm.setTargetAngle(
+    m_DrivetrainSubsystem.setDefaultCommand(
+        m_DrivetrainSubsystem.driveCommand(
+            m_driverController::getLeftY, m_driverController::getRightX));
+    m_ArmSubsystem.setDefaultCommand(
+        m_ArmSubsystem.changeTargetAngle(
             m_driverController::getLeftTriggerAxis, m_driverController::getRightTriggerAxis));
   }
 
@@ -63,6 +65,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Autos.withBeakerCommand(drivetrain, arm);
+    return Autos.withBeakerCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
   }
 }

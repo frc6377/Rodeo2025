@@ -8,12 +8,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.intake.Intake;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static Command withBeakerCommand(Drivetrain drivetrain, Arm arm) {
-    return Commands.sequence(drivetrain.goForwardCommand(5, 2), drivetrain.turnCommand(-1, 0.5))
-        .withName("withBeakerCommand");
+  public static Command withBeakerCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
+    return Commands.sequence(
+            drivetrain.goForwardCommand(5, 2),
+            drivetrain.turnCommand(-1, 0.5),
+            intake.intakeBeaker())
+        .withName("WithBeakerCommand");
   }
 
   private Autos() {
