@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 import frc.robot.Constants.PivotConstants;
+import frc.robot.utilities.DebugEntry;
 import java.util.function.DoubleSupplier;
 
 public class Arm extends SubsystemBase {
@@ -29,9 +30,17 @@ public class Arm extends SubsystemBase {
   private final double maxAngle = PivotConstants.PivotMotorMax;
   private PIDController pidController =
       new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
-  private ArmFeedforward armFeedforward =
+  private ArmFeedforward armFeedForward =
       new ArmFeedforward(
           PivotConstants.kS, PivotConstants.kG, PivotConstants.kV, PivotConstants.kA);
+
+  private DebugEntry<Double> m_kP;
+  private DebugEntry<Double> m_kI;
+  private DebugEntry<Double> m_kD;
+  private DebugEntry<Double> m_kS;
+  private DebugEntry<Double> m_kG;
+  private DebugEntry<Double> m_kV;
+  private DebugEntry<Double> m_kA;
 
   public Arm() {
     pivotEncoder = new Encoder(0, 1);
@@ -46,6 +55,14 @@ public class Arm extends SubsystemBase {
 
     pivotEncoder.reset();
     pivotEncoder.setDistancePerPulse(1);
+
+    m_kP = new DebugEntry<>(PivotConstants.kP, "kP", this);
+    m_kI = new DebugEntry<>(PivotConstants.kI, "kI", this);
+    m_kD = new DebugEntry<>(PivotConstants.kD, "kD", this);
+    m_kS = new DebugEntry<>(PivotConstants.kS, "kS", this);
+    m_kG = new DebugEntry<>(PivotConstants.kG, "kG", this);
+    m_kV = new DebugEntry<>(PivotConstants.kV, "kV", this);
+    m_kA = new DebugEntry<>(PivotConstants.kA, "kA", this);
   }
 
   public double getCurrentAngle() {
@@ -65,14 +82,27 @@ public class Arm extends SubsystemBase {
 
   public void update() {
     double currentAngle = getCurrentAngle();
-    double feedforward = armFeedforward.calculate(currentAngle, 0); // Calculate feedforward
+    double feedforward = armFeedForward.calculate(currentAngle, 0); // Calculate feedforward
     double pidOutput = pidController.calculate(currentAngle, targetAngle); // Calculate PID output
     speed = feedforward + pidOutput;
-    masterPivotMotor.set(ControlMode.PercentOutput, feedforward/RobotController.getBatteryVoltage() + pidOutput);
+    masterPivotMotor.set(
+        ControlMode.PercentOutput, feedforward / RobotController.getBatteryVoltage() + pidOutput);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    m_kP.log(pidController.getP());
+    m_kI.log(pidController.getI());
+    m_kD.log(pidController.getD());
+    m_kS.log(m_kS.get());
+    m_kG.log(m_kG.get());
+    m_kV.log(m_kV.get());
+    m_kA.log(m_kA.get());
+
+    armFeedForward = new ArmFeedforward(m_kS.get(), m_kG.get(), m_kV.get(), m_kA.get());
+
+    pidController.setP(m_kP.get());
+    pidController.setI(m_kI.get());
+    pidController.setD(m_kD.get());
   }
 }

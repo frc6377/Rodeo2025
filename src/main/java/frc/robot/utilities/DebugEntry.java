@@ -66,4 +66,8 @@ public class DebugEntry<T> {
       DriverStation.reportError("Invalid type for log " + name, false);
     }
   }
+
+  public T get() {
+    return lastValue;
+  }
 }
