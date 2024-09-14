@@ -56,7 +56,8 @@ public class RobotContainer {
     m_DrivetrainSubsystem.setDefaultCommand(
         m_DrivetrainSubsystem.driveCommand(
             m_driverController::getLeftY, m_driverController::getRightX));
-    m_ArmSubsystem.setDefaultCommand(m_ArmSubsystem.changeTargetAngle(
+    m_ArmSubsystem.setDefaultCommand(
+        m_ArmSubsystem.changeTargetAngle(
             m_driverController::getLeftTriggerAxis, m_driverController::getRightTriggerAxis));
   }
 

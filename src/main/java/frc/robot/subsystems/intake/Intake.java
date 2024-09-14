@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
   private final TalonSRX IntakeMotor;
 
   public Intake() {
-    IntakeMotor = new TalonSRX(MotorIDs.IntakeMotor);
+    IntakeMotor = new TalonSRX(MotorIDs.IntakeMotorID);
   }
 
   /**

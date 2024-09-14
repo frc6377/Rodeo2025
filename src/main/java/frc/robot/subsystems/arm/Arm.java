@@ -59,7 +59,7 @@ public class Arm extends SubsystemBase {
 
   public double getCurrentAngle() {
     // Placeholder for actual sensor FIXME!!
-    return (pivotEncoder.get()%1)*360;
+    return (pivotEncoder.get() % 1) * 360;
   }
 
   public Command changeTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
