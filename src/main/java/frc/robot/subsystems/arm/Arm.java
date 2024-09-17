@@ -58,7 +58,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getCurrentAngle() {
-    // Placeholder for actual sensor FIXME!!
+    // Get the current angle of the pivot
     return (pivotEncoder.get() % 1) * 360;
   }
 

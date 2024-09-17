@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,6 +24,7 @@ public class RobotContainer {
   private final Drivetrain m_DrivetrainSubsystem;
   private final Arm m_ArmSubsystem;
   private final Intake m_IntakeSubsystem;
+  private final ShuffleboardTab configTag = Shuffleboard.getTab("Config");
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   private final CommandXboxController m_driverController =
@@ -34,6 +36,16 @@ public class RobotContainer {
     m_DrivetrainSubsystem = new Drivetrain();
     m_ArmSubsystem = new Arm();
     m_IntakeSubsystem = new Intake();
+    
+    SendableChooser<Command> m_chooser = new SendableChooser<>();
+    Command scoreHigh= Autos.scoreHighAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    Command scoreLow= Autos.scoreLowAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    Command pickUpBeaker= Autos.pickUpBeakerAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    m_chooser.addOption("Score High", scoreHigh);
+    m_chooser.addOption("Score Low", scoreLow);
+    m_chooser.addOption("Pick Up Beaker", pickUpBeaker);
+    m_chooser.setDefaultOption("Score High", scoreHigh);
+    configTab.add("Autonomous Selection", m_chooser);
     configureBindings();
   }
 
@@ -47,6 +59,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
     m_driverController.leftBumper().whileTrue(m_IntakeSubsystem.intakeBeaker());
     m_driverController.rightBumper().whileTrue(m_IntakeSubsystem.outtakeBeaker());
     m_driverController.y().whileTrue(m_ArmSubsystem.scoreHighCommand());
@@ -59,6 +72,8 @@ public class RobotContainer {
     m_ArmSubsystem.setDefaultCommand(
         m_ArmSubsystem.changeTargetAngle(
             m_driverController::getLeftTriggerAxis, m_driverController::getRightTriggerAxis));
+    
+    
   }
 
   /**
@@ -67,6 +82,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Autos.withBeakerCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    return Autos.scoreHighAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
   }
 }

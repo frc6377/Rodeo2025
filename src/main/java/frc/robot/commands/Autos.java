@@ -12,12 +12,29 @@ import frc.robot.subsystems.intake.Intake;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static Command withBeakerCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
+  public static Command scoreHighAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
     return Commands.sequence(
-            arm.scoreHighCommand(), drivetrain.goForwardCommand(1, 2), intake.outtakeBeaker())
-        .withName("WithBeakerCommand");
+            Commands.parallel(
+              arm.scoreHighCommand(), 
+              drivetrain.goForwardCommand(1, 2)
+            ), 
+            intake.outtakeBeaker())
+        .withName("scoreHighAutoCommand");
   }
-
+  public static Command scoreLowAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
+    return Commands.sequence(
+            Commands.parallel(
+              arm.scoreLowCommand(), 
+              drivetrain.goForwardCommand(1, 2)
+            ),
+            intake.outtakeBeaker())
+        .withName("scoreLowAutoCommand");
+  }
+  public static Command pickUpBeakerAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
+    return Commands.sequence(
+            arm.pickUpBeakerCommand(), drivetrain.goForwardCommand(1, 2), intake.intakeBeaker())
+        .withName("pickUpBeakerAutoCommand");
+  }
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
