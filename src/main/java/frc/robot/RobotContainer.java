@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -13,8 +15,7 @@ import frc.robot.commands.Autos;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.intake.Intake;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -37,11 +38,14 @@ public class RobotContainer {
     m_DrivetrainSubsystem = new Drivetrain();
     m_ArmSubsystem = new Arm();
     m_IntakeSubsystem = new Intake();
-    
+
     SendableChooser<Command> m_chooser = new SendableChooser<>();
-    Command scoreHigh= Autos.scoreHighAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
-    Command scoreLow= Autos.scoreLowAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
-    Command pickUpBeaker= Autos.pickUpBeakerAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    Command scoreHigh =
+        Autos.scoreHighAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    Command scoreLow =
+        Autos.scoreLowAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    Command pickUpBeaker =
+        Autos.pickUpBeakerAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
     m_chooser.addOption("Score High", scoreHigh);
     m_chooser.addOption("Score Low", scoreLow);
     m_chooser.addOption("Pick Up Beaker", pickUpBeaker);
@@ -73,8 +77,6 @@ public class RobotContainer {
     m_ArmSubsystem.setDefaultCommand(
         m_ArmSubsystem.changeTargetAngle(
             m_driverController::getLeftTriggerAxis, m_driverController::getRightTriggerAxis));
-    
-    
   }
 
   /**
