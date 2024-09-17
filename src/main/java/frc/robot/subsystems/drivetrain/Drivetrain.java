@@ -7,11 +7,12 @@ package frc.robot.subsystems.drivetrain;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
+import frc.robot.utilities.DebugEntry;
+
 import java.util.function.DoubleSupplier;
 
 public class Drivetrain extends SubsystemBase {
@@ -21,7 +22,8 @@ public class Drivetrain extends SubsystemBase {
   private final VictorSPX leftDriveVictor;
   private final TalonSRX rightDriveTalon;
   private final VictorSPX rightDriveVictor;
-
+  private DebugEntry<Double> leftDriveSpeed;  
+  private DebugEntry<Double> rightDriveSpeed;
   public Drivetrain() {
     leftDriveTalon = new TalonSRX(MotorIDs.leftDriveTalonID);
     leftDriveVictor = new VictorSPX(MotorIDs.leftDriveVictorID);
@@ -31,6 +33,9 @@ public class Drivetrain extends SubsystemBase {
     leftDriveVictor.follow(leftDriveTalon);
     leftDriveTalon.setInverted(true);
     leftDriveVictor.setInverted(true);
+
+    leftDriveSpeed = new DebugEntry<Double>(0.0, "Left Drive Speed", this);
+    rightDriveSpeed = new DebugEntry<Double>(0.0, "Right Drive Speed", this);
   }
 
   public Command driveCommand(DoubleSupplier forward, DoubleSupplier rotation) {
@@ -46,6 +51,8 @@ public class Drivetrain extends SubsystemBase {
           right /= 2;
           leftDriveTalon.set(ControlMode.PercentOutput, left);
           rightDriveTalon.set(ControlMode.PercentOutput, right);
+          leftDriveSpeed.log(left*100);
+          rightDriveSpeed.log(right*100);
         });
   }
   // Auton command to drive forward for a certain amount of time
@@ -80,9 +87,6 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("leftDriveTalon Output", leftDriveTalon.getMotorOutputPercent());
-    SmartDashboard.putNumber("leftDriveVictor Output", leftDriveVictor.getMotorOutputPercent());
-    SmartDashboard.putNumber("rightDriveTalon Output", rightDriveTalon.getMotorOutputPercent());
-    SmartDashboard.putNumber("rightDriveVictor Output", rightDriveVictor.getMotorOutputPercent());
+
   }
 }
