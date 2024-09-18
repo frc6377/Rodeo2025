@@ -59,7 +59,7 @@ public class Arm extends SubsystemBase {
 
   public double getCurrentAngle() {
     // Get the current angle of the pivot
-    return (pivotEncoder.get() % 1) * 360;
+    return pivotEncoder.get();
   }
 
   public Command changeTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
@@ -68,7 +68,6 @@ public class Arm extends SubsystemBase {
           double angle =
               ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 2) + targetAngle;
           targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
-          update();
         });
   }
 
@@ -76,7 +75,6 @@ public class Arm extends SubsystemBase {
     return run(
         () -> {
           targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
-          update();
         });
   }
 
@@ -84,7 +82,6 @@ public class Arm extends SubsystemBase {
     return run(
         () -> {
           targetAngle = PivotConstants.scoreHighAngle;
-          update();
         });
   }
 
@@ -92,7 +89,6 @@ public class Arm extends SubsystemBase {
     return run(
         () -> {
           targetAngle = PivotConstants.scoreLowAngle;
-          update();
         });
   }
 
@@ -100,7 +96,6 @@ public class Arm extends SubsystemBase {
     return run(
         () -> {
           targetAngle = PivotConstants.pickUpBeakerAngle;
-          update();
         });
   }
 
@@ -121,6 +116,7 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
+    update();
     m_kP.log(pidController.getP());
     m_kI.log(pidController.getI());
     m_kD.log(pidController.getD());
@@ -128,6 +124,8 @@ public class Arm extends SubsystemBase {
     pidController.setP(m_kP.get());
     pidController.setI(m_kI.get());
     pidController.setD(m_kD.get());
-    SmartDashboard.putNumber("Current Angle", getCurrentAngle());
+    SmartDashboard.putNumber("Current Angle", (getCurrentAngle()*360)%360);
+    SmartDashboard.putNumber("Target Angle", targetAngle);
+    SmartDashboard.putBoolean("Arm at taget angle",getCurrentAngle()==targetAngle);
   }
 }
