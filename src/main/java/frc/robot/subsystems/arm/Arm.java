@@ -124,8 +124,8 @@ public class Arm extends SubsystemBase {
     pidController.setP(m_kP.get());
     pidController.setI(m_kI.get());
     pidController.setD(m_kD.get());
-    SmartDashboard.putNumber("Current Angle", (getCurrentAngle()*360)%360);
+    SmartDashboard.putNumber("Current Angle", (getCurrentAngle() * 360) % 360);
     SmartDashboard.putNumber("Target Angle", targetAngle);
-    SmartDashboard.putBoolean("Arm at taget angle",getCurrentAngle()==targetAngle);
+    SmartDashboard.putBoolean("Arm at taget angle", getCurrentAngle() == targetAngle);
   }
 }
