@@ -64,7 +64,7 @@ public final class Constants {
 
     // Simulation constants
     public static final DCMotor kArmMotor = DCMotor.getCIM(2);
-    public static final double kArmGearing = 100;
+    public static final double kArmGearing = 45;
     // CAD MOI in in^2 lb
     // xx 109.765 (Using)
     // yy 92.943
