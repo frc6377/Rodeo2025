@@ -65,7 +65,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
     m_driverController.leftBumper().whileTrue(m_IntakeSubsystem.intakeBeaker());
     m_driverController.rightBumper().whileTrue(m_IntakeSubsystem.outtakeBeaker());
     m_driverController.y().whileTrue(m_ArmSubsystem.scoreHighCommand());

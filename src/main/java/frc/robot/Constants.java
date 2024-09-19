@@ -18,8 +18,8 @@ public final class Constants {
   }
 
   public static class PivotConstants {
-    public static final int PivotMotorMin = 0;
-    public static final int PivotMotorMax = 0;
+    public static final int PivotMotorMin = -20;
+    public static final int PivotMotorMax = 90;
     public static final double kP = 0.1; // Proportional gain
     public static final double kI = 0.0; // Integral gain
     public static final double kD = 0.0; // Derivative gain
@@ -28,9 +28,9 @@ public final class Constants {
     public static final double kV = 2.15; // Velocity gain
     public static final double kA = 0.04; // Acceleration gain
     public static final double initalAngle = 0; // Initial angle of the arm
-    public static final double scoreHighAngle = -120; // Angle to score high
-    public static final double scoreLowAngle = -45; // Angle to score low
-    public static final double pickUpBeakerAngle = -20; // Angle to intake
+    public static final double scoreHighAngle = -10; // Angle to score high
+    public static final double scoreLowAngle = 45; // Angle to score low
+    public static final double pickUpBeakerAngle = 90; // Angle to intake
   }
 
   public static class MotorIDs {

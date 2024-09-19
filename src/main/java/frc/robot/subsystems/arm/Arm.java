@@ -8,10 +8,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,14 +29,9 @@ public class Arm extends SubsystemBase {
   private final double maxAngle = PivotConstants.PivotMotorMax;
   private PIDController pidController =
       new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
-  private ArmFeedforward armFeedForward =
-      new ArmFeedforward(
-          PivotConstants.kS, PivotConstants.kG, PivotConstants.kV, PivotConstants.kA);
-
   private DebugEntry<Double> m_kP;
   private DebugEntry<Double> m_kI;
   private DebugEntry<Double> m_kD;
-
   public Arm() {
     pivotEncoder = new DutyCycleEncoder(0);
     pivotEncoder.setDistancePerRotation(360.0);
@@ -109,11 +102,8 @@ public class Arm extends SubsystemBase {
 
   private void update() {
     double currentAngle = getCurrentAngle();
-    double feedforward =
-        armFeedForward.calculate(currentAngle * 2 * Math.PI, 0); // Calculate feedforward
     double pidOutput = pidController.calculate(currentAngle, targetAngle); // Calculate PID output
-    double output = feedforward / RobotController.getBatteryVoltage() + pidOutput;
-    masterPivotMotor.set(ControlMode.PercentOutput, output);
+    masterPivotMotor.set(ControlMode.PercentOutput, pidOutput);
   }
 
   public Command runRaw(double speed) {
