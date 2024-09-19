@@ -23,11 +23,8 @@ public final class Constants {
 
     public static final int Pigeon2ID = 5;
 
-    public static final int intakemotorleft = 6
-    public static final int intakemotorright = 7
-
-
-
+    public static final int intakemotorleft = 6;
+    public static final int intakemotorright = 7;
   }
 
   public static class DriveTrainConstants {
@@ -43,6 +40,10 @@ public final class Constants {
 
     public static final double minPower = 0.3;
     public static final double debounce = 1;
+  }
+
+  public static class ArmConstants {
+    public static final double intakePercent = 0.2;
   }
 
   public static class OperatorConstants {

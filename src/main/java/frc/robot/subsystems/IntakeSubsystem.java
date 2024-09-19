@@ -6,69 +6,54 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.DriveTrainConstants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.MotorIDs;
-
 
 public class IntakeSubsystem extends SubsystemBase {
   private final VictorSPX intakemotorright;
   private final VictorSPX intakemotorleft;
 
-
-
-
   /** Creates a new ExampleSubsystem. */
   public IntakeSubsystem() {
 
-  intakemotorright = new VictorSPX(MotorIDs.intakemotorright);
-  intakemotorleft = new VictorSPX(MotorIDs.intakemotorleft);
-  intakemotorright.setInverted(true);
-
-
+    intakemotorright = new VictorSPX(MotorIDs.intakemotorright);
+    intakemotorleft = new VictorSPX(MotorIDs.intakemotorleft);
+    intakemotorright.setInverted(true);
   }
 
-  public void runintake(Boolean forward){
-    if(forward){
-     intakemotorright.set(ControlMode.PercentOutput, 0.7);
-     intakemotorleft.set(ControlMode.PercentOutput,0.7);
+  public void runintake(Boolean forward) {
+    if (forward) {
+      intakemotorright.set(ControlMode.PercentOutput, ArmConstants.intakePercent);
+      intakemotorleft.set(ControlMode.PercentOutput, ArmConstants.intakePercent);
+    } else {
+      intakemotorright.set(ControlMode.PercentOutput, -ArmConstants.intakePercent);
+      intakemotorleft.set(ControlMode.PercentOutput, -ArmConstants.intakePercent);
     }
-    else{
-      intakemotorright.set(ControlMode.PercentOutput, -0.7);
-     intakemotorleft.set(ControlMode.PercentOutput,-0.7);
-    }
-  public void stopintake (){
+  }
+
+  public void stopintake() {
     intakemotorright.set(ControlMode.PercentOutput, 0.0);
-    intakemotorleft.set(ControlMode.PercentOutput,0.0);
+    intakemotorleft.set(ControlMode.PercentOutput, 0.0);
   }
-
-
-  }
-    
-
 
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public Command intakecommand() {
+  public Command intakeCommand() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return startEnd(runintake(true),);
+
+    return new StartEndCommand(() -> runintake(true), () -> stopintake());
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+  public Command intakeOutakeCommand() {
+
+    return new StartEndCommand(() -> runintake(false), () -> stopintake());
   }
 
   @Override
