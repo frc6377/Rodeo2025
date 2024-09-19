@@ -27,6 +27,7 @@ public class RobotContainer {
   private final Arm m_ArmSubsystem;
   private final Intake m_IntakeSubsystem;
   private final ShuffleboardTab configTab = Shuffleboard.getTab("Config");
+  private final SendableChooser<Command> m_chooser;
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   private final CommandXboxController m_driverController =
@@ -39,7 +40,7 @@ public class RobotContainer {
     m_ArmSubsystem = new Arm();
     m_IntakeSubsystem = new Intake();
 
-    SendableChooser<Command> m_chooser = new SendableChooser<>();
+    m_chooser = new SendableChooser<>();
     Command scoreHigh =
         Autos.scoreHighAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
     Command scoreLow =

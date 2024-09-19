@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIDs;
 
 public class Intake extends SubsystemBase {
-  private final TalonSRX IntakeMotor;
+  private final TalonSRX intakeMotor;
 
   public Intake() {
-    IntakeMotor = new TalonSRX(MotorIDs.IntakeMotorID);
+    intakeMotor = new TalonSRX(MotorIDs.IntakeMotorID);
   }
 
   /**
@@ -25,10 +25,10 @@ public class Intake extends SubsystemBase {
   public Command intakeBeaker() {
     return startEnd(
         () -> {
-          IntakeMotor.set(ControlMode.PercentOutput, 1);
+          intakeMotor.set(ControlMode.PercentOutput, 1);
         },
         () -> {
-          IntakeMotor.set(ControlMode.PercentOutput, 0);
+          intakeMotor.set(ControlMode.PercentOutput, 0);
         });
 
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
@@ -38,10 +38,10 @@ public class Intake extends SubsystemBase {
   public Command outtakeBeaker() {
     return startEnd(
         () -> {
-          IntakeMotor.set(ControlMode.PercentOutput, -1);
+          intakeMotor.set(ControlMode.PercentOutput, -1);
         },
         () -> {
-          IntakeMotor.set(ControlMode.PercentOutput, 0);
+          intakeMotor.set(ControlMode.PercentOutput, 0);
         });
     // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
 

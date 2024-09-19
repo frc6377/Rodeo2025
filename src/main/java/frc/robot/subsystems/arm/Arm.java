@@ -7,6 +7,7 @@ package frc.robot.subsystems.arm;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -56,18 +57,25 @@ public class Arm extends SubsystemBase {
     m_kI = new DebugEntry<>(PivotConstants.kI, "kI", this);
     m_kD = new DebugEntry<>(PivotConstants.kD, "kD", this);
   }
-
+  /**
+   * Gets the current angle of the arm
+   *
+   * @return the value of the arm encoder in rotations
+   */
   public double getCurrentAngle() {
-    // Get the current angle of the pivot
+    // Get the current angle of the pivotn in rotations
     return pivotEncoder.get();
   }
 
   public Command changeTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
+    goToAngle(0).schedule();
     return run(
         () -> {
           double angle =
-              ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 2) + targetAngle;
-          targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+              MathUtil.applyDeadband(
+                      ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 10), 0.1)
+                  + targetAngle;
+          goToAngle(angle);
         });
   }
 
@@ -101,10 +109,12 @@ public class Arm extends SubsystemBase {
 
   private void update() {
     double currentAngle = getCurrentAngle();
-    double feedforward = armFeedForward.calculate(currentAngle, 0); // Calculate feedforward
+    double feedforward =
+        armFeedForward.calculate(currentAngle * 2 * Math.PI, 0); // Calculate feedforward
     double pidOutput = pidController.calculate(currentAngle, targetAngle); // Calculate PID output
+    double output = feedforward / RobotController.getBatteryVoltage() + pidOutput;
     masterPivotMotor.set(
-        ControlMode.PercentOutput, feedforward / RobotController.getBatteryVoltage() + pidOutput);
+        ControlMode.PercentOutput, output);
   }
 
   public Command runRaw(double speed) {
