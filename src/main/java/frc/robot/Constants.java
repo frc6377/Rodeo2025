@@ -22,13 +22,17 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    public static final double scoreAngle = 135.0;
-    public static final double stowedAngle = 30.0;
+    public static final double scoreAngle = Math.toRadians(-45.0);
+    public static final double stowedAngle = Math.toRadians(-130.0);
     public static final double kArmP = 1.0;
     public static final double kArmI = 0.0;
     public static final double kArmD = 0.0;
-    public static final double kArmG = 0.56;
-    public static final double kArmV = 2.15;
-    public static final double kArmA = 0.03;
+    public static final double kArmG = 0.3;
+    public static final double kArmV = 4.06;
+    public static final double kArmA = 0.01;
+  }
+
+  public static class intakeConstants {
+    public static final double intakePercent = .15;
   }
 }
