@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 import java.util.function.DoubleSupplier;
@@ -29,5 +30,19 @@ public class Drivetrain extends SubsystemBase {
           m_frontLeftMotor.set(ControlMode.PercentOutput, leftPercent);
           m_frontRightMotor.set(ControlMode.PercentOutput, rightPercent);
         });
+  }
+
+  public Command Forward(double sec, double percent) {
+    return Commands.deadline(
+        Commands.waitSeconds(sec),
+        runEnd(
+            () -> {
+              m_frontLeftMotor.set(ControlMode.PercentOutput, percent);
+              m_frontRightMotor.set(ControlMode.PercentOutput, percent);
+            },
+            () -> {
+              m_frontLeftMotor.set(ControlMode.PercentOutput, 0);
+              m_frontRightMotor.set(ControlMode.PercentOutput, 0);
+            }));
   }
 }
