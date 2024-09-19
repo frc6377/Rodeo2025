@@ -113,8 +113,7 @@ public class Arm extends SubsystemBase {
         armFeedForward.calculate(currentAngle * 2 * Math.PI, 0); // Calculate feedforward
     double pidOutput = pidController.calculate(currentAngle, targetAngle); // Calculate PID output
     double output = feedforward / RobotController.getBatteryVoltage() + pidOutput;
-    masterPivotMotor.set(
-        ControlMode.PercentOutput, output);
+    masterPivotMotor.set(ControlMode.PercentOutput, output);
   }
 
   public Command runRaw(double speed) {

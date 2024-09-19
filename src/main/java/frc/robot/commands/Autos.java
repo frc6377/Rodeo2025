@@ -14,8 +14,7 @@ public final class Autos {
   /** Example static factory for an autonomous command. */
   public static Command scoreHighAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
     return Commands.sequence(
-            Commands.parallel(arm.scoreHighCommand(), drivetrain.goForwardCommand(1, 2)),
-            intake.outtakeBeaker())
+            Commands.parallel(drivetrain.goForwardCommand(-0.5, 0.5)), intake.outtakeBeaker())
         .withName("scoreHighAutoCommand");
   }
 
