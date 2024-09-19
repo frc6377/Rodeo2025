@@ -6,15 +6,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -33,7 +32,8 @@ public class ArmSubsystem extends SubsystemBase {
   private final TalonSRX armMotor1;
   private final TalonSRX armMotor2;
 
-  private final CANcoder armEncoder;
+  private final DutyCycleEncoder armEncoder;
+  private final DutyCycleEncoderSim armEncoderSim;
 
   private final PIDController armPIDController;
   private final ArmFeedforward armFeedforward;
@@ -53,8 +53,9 @@ public class ArmSubsystem extends SubsystemBase {
     armMotor2 = new TalonSRX(MotorIDs.armMotor2);
     armMotor2.follow(armMotor1);
 
-    armEncoder = new CANcoder(MotorIDs.armEncoder);
-    EncoderSim armEncoderSim = new EncoderSim(new Encoder(0, 1));
+    armEncoder = new DutyCycleEncoder(MotorIDs.armEncoder);
+    armEncoder.setPositionOffset(armEncoder.getAbsolutePosition());
+    armEncoderSim = new DutyCycleEncoderSim(armEncoder);
 
     armPIDController = ArmConstants.armPID.getPIDController();
     ArmConstants.armPID.createTunableNumbers("Arm PID", armPIDController, this);
@@ -101,8 +102,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double calcArmFeedforward() {
-    double calc =
-        armFeedforward.calculate(getArmPoseRads(), armEncoder.getVelocity().getValueAsDouble());
+    double calc = armFeedforward.calculate(getArmPoseRads(), 0);
     SmartDashboard.putNumber("Arm Feedforward", calc);
     return calc;
   }
@@ -111,7 +111,7 @@ public class ArmSubsystem extends SubsystemBase {
     if (Robot.isSimulation()) {
       return armSim.getAngleRads();
     } else {
-      return Units.rotationsToRadians(armEncoder.getPosition().getValueAsDouble());
+      return Units.rotationsToRadians(armEncoder.getAbsolutePosition());
     }
   }
 
@@ -145,10 +145,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Motor 1 Output", armMotor1.getMotorOutputPercent());
     SmartDashboard.putNumber("Arm Motor 2 Output", armMotor2.getMotorOutputPercent());
 
-    SmartDashboard.putNumber(
-        "Arm Encoder Angle Deg",
-        Units.rotationsToDegrees(armEncoder.getPosition().getValueAsDouble()));
-    SmartDashboard.putNumber("Arm Encoder Velocity", armEncoder.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Arm Encoder Angle Deg", Units.radiansToDegrees(getArmPoseRads()));
   }
 
   @Override
@@ -157,7 +154,6 @@ public class ArmSubsystem extends SubsystemBase {
     armSim.update(Robot.defaultPeriodSecs);
 
     scoringMech.setAngle(Units.radiansToDegrees(getArmPoseRads()) - ArmConstants.kArmBaseAngle);
-    armEncoder.setPosition(Units.radiansToRotations(getArmPoseRads()));
 
     SmartDashboard.putNumber("Arm Sim Angle", Units.radiansToDegrees(getArmPoseRads()));
   }

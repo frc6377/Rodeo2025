@@ -27,13 +27,15 @@ public final class Constants {
 
     public static final int armMotor1 = 6;
     public static final int armMotor2 = 7;
-    public static final int armEncoder = 8;
 
     public static final int effectorMotor1 = 9;
     public static final int effectorMotor2 = 10;
 
     public static final int wristMotor = 11;
     public static final int wristEncoder = 12;
+
+    // not CAN bus
+    public static final int armEncoder = 9;
   }
 
   public static class DriveTrainConstants {
