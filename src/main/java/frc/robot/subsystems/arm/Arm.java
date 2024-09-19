@@ -23,18 +23,23 @@ public class Arm extends SubsystemBase {
   private final TalonSRX masterPivotMotor;
 
   private final TalonSRX slavePivotMotor;
+
   private final DutyCycleEncoder pivotEncoder;
+
   private double targetAngle = PivotConstants.initalAngle;
   private final double minAngle = PivotConstants.PivotMotorMin;
   private final double maxAngle = PivotConstants.PivotMotorMax;
+
   private PIDController pidController =
       new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
+
   private DebugEntry<Double> m_kP;
   private DebugEntry<Double> m_kI;
   private DebugEntry<Double> m_kD;
+
   public Arm() {
     pivotEncoder = new DutyCycleEncoder(0);
-    pivotEncoder.setDistancePerRotation(360.0);
+
     masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorMasterID);
     masterPivotMotor.configFactoryDefault();
     masterPivotMotor.setNeutralMode(NeutralMode.Brake);
@@ -68,14 +73,14 @@ public class Arm extends SubsystemBase {
               MathUtil.applyDeadband(
                       ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 10), 0.1)
                   + targetAngle;
-          goToAngle(angle);
+          goToAngle(angle); // degrees
         });
   }
 
   public Command goToAngle(double angle) {
     return run(
         () -> {
-          targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+          targetAngle = Math.max(minAngle, Math.min(maxAngle, angle)); // degrees
         });
   }
 
@@ -101,9 +106,11 @@ public class Arm extends SubsystemBase {
   }
 
   private void update() {
-    double currentAngle = getCurrentAngle();
-    double pidOutput = pidController.calculate(currentAngle, targetAngle); // Calculate PID output
+    double currentAngle = getCurrentAngle() * 360;
+    double pidOutput =
+        pidController.calculate(currentAngle, targetAngle); // Calculate PID output indegrees
     masterPivotMotor.set(ControlMode.PercentOutput, pidOutput);
+    SmartDashboard.putNumber("PID output", pidOutput);
   }
 
   public Command runRaw(double speed) {
@@ -123,7 +130,7 @@ public class Arm extends SubsystemBase {
     pidController.setP(m_kP.get());
     pidController.setI(m_kI.get());
     pidController.setD(m_kD.get());
-    SmartDashboard.putNumber("Current Angle", (getCurrentAngle() * 360) % 360);
+    SmartDashboard.putNumber("Current Angle", (getCurrentAngle() * 360));
     SmartDashboard.putNumber("Target Angle", targetAngle);
     SmartDashboard.putBoolean("Arm at taget angle", getCurrentAngle() == targetAngle);
   }

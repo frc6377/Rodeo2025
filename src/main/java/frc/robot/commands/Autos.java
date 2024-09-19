@@ -14,14 +14,15 @@ public final class Autos {
   /** Example static factory for an autonomous command. */
   public static Command scoreHighAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
     return Commands.sequence(
-            Commands.parallel(drivetrain.goForwardCommand(-0.5, 0.5)), intake.outtakeBeaker())
+            drivetrain.goForwardCommand(-1, 2),
+            Commands.waitSeconds(1),
+            intake.outtakeBeaker().withTimeout(1))
         .withName("scoreHighAutoCommand");
   }
 
   public static Command scoreLowAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
     return Commands.sequence(
-            Commands.parallel(arm.scoreLowCommand(), drivetrain.goForwardCommand(1, 2)),
-            intake.outtakeBeaker())
+            arm.scoreLowCommand(), drivetrain.goForwardCommand(1, 2), intake.outtakeBeaker())
         .withName("scoreLowAutoCommand");
   }
 

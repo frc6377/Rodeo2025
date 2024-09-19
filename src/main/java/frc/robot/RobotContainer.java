@@ -35,18 +35,18 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
     m_DrivetrainSubsystem = new Drivetrain();
     m_ArmSubsystem = new Arm();
     m_IntakeSubsystem = new Intake();
 
-    m_chooser = new SendableChooser<>();
     Command scoreHigh =
         Autos.scoreHighAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
     Command scoreLow =
         Autos.scoreLowAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
     Command pickUpBeaker =
         Autos.pickUpBeakerAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+
+    m_chooser = new SendableChooser<>();
     m_chooser.addOption("Score High", scoreHigh);
     m_chooser.addOption("Score Low", scoreLow);
     m_chooser.addOption("Pick Up Beaker", pickUpBeaker);
