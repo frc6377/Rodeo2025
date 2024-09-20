@@ -51,10 +51,11 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
     armMotor1 = new TalonSRX(MotorIDs.armMotor1);
     armMotor2 = new TalonSRX(MotorIDs.armMotor2);
+    armMotor1.setInverted(true);
     armMotor2.follow(armMotor1);
 
     armEncoder = new DutyCycleEncoder(MotorIDs.armEncoder);
-    armEncoder.setPositionOffset(armEncoder.getAbsolutePosition());
+    armEncoder.setPositionOffset(ArmConstants.offset);
     armEncoderSim = new DutyCycleEncoderSim(armEncoder);
 
     armPIDController = ArmConstants.armPID.getPIDController();

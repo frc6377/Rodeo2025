@@ -64,6 +64,8 @@ public final class Constants {
     public static final double lowScorePose = Units.degreesToRadians(-45);
     public static final double highScorePose = Units.degreesToRadians(25);
 
+    public static final double offset = 0;
+
     // Simulation constants
     public static final DCMotor kArmMotor = DCMotor.getCIM(2);
     public static final double kArmGearing = 45;
