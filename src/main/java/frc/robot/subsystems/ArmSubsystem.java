@@ -24,7 +24,8 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
     isStowed = false;
     m_armMotor = new TalonSRX(ArmConstants.armMotorId);
-    m_armEncoder = new DutyCycleEncoder(1);
+    m_armMotor.setInverted(true);
+    m_armEncoder = new DutyCycleEncoder(0);
     m_armEncoder.reset();
     // TODO: add amout for proper offset so FF works.
     m_armEncoder.setDistancePerRotation(Math.PI * 2);
@@ -69,7 +70,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("ArmAngle", getArmAngle());
+    SmartDashboard.putNumber("ArmAngle", Math.toDegrees(getArmAngle()));
     SmartDashboard.putBoolean("isStowed", isStowed);
   }
 }
