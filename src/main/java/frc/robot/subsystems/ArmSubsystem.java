@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -22,7 +23,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public ArmSubsystem() {
     isStowed = false;
-    m_armMotor = new TalonSRX(5);
+    m_armMotor = new TalonSRX(ArmConstants.armMotorId);
     m_armEncoder = new DutyCycleEncoder(1);
     m_armEncoder.reset();
     // TODO: add amout for proper offset so FF works.
@@ -41,8 +42,10 @@ public class ArmSubsystem extends SubsystemBase {
                 this::getArmAngle,
                 () -> {
                   if (!isStowed) {
+                    SmartDashboard.putNumber("armSetPoint", ArmConstants.scoreAngle);
                     return ArmConstants.scoreAngle;
                   } else {
+                    SmartDashboard.putNumber("armSetPoint", ArmConstants.stowedAngle);
                     return ArmConstants.stowedAngle;
                   }
                 },
@@ -61,5 +64,12 @@ public class ArmSubsystem extends SubsystemBase {
 
   private void setArmMotors(double output) {
     m_armMotor.set(ControlMode.PercentOutput, output);
+    SmartDashboard.putNumber("ArmMotorOutput", output);
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("ArmAngle", getArmAngle());
+    SmartDashboard.putBoolean("isStowed", isStowed);
   }
 }

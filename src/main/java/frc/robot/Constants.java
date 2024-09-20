@@ -22,6 +22,7 @@ public final class Constants {
   }
 
   public static class ArmConstants {
+    public static final int armMotorId = 5;
     public static final double scoreAngle = Math.toRadians(-45.0);
     public static final double stowedAngle = Math.toRadians(-130.0);
     public static final double kArmP = 1.0;
@@ -33,6 +34,7 @@ public final class Constants {
   }
 
   public static class intakeConstants {
+    public static final int intakeMotorId = 6;
     public static final double intakePercent = .15;
   }
 }
