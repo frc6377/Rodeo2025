@@ -18,7 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
     return run(
         () -> {
           double intakePercent =
-              ((leftTrigger.getAsDouble() - rightTrigger.getAsDouble())
+              -((leftTrigger.getAsDouble() - rightTrigger.getAsDouble())
                   * intakeConstants.intakePercent);
           m_intakeMotor.set(ControlMode.PercentOutput, intakePercent);
         });

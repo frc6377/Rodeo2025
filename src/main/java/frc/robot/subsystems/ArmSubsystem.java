@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +18,7 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
     // isStowed = false;
     m_armMotor = new TalonSRX(6);
+    m_armMotor.setNeutralMode(NeutralMode.Brake);
     /*m_armEncoder = new DutyCycleEncoder(1);
     m_armEncoder.reset();
     // TODO: add amout for proper offset so FF works.
@@ -28,28 +30,23 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public Command armDownCommand() {
-    return run(
+    return startEnd(
         () -> {
           double armPercent = ArmConstants.armPercent;
 
           m_armMotor.set(ControlMode.PercentOutput, armPercent);
-        });
+        },
+        () -> m_armMotor.set(ControlMode.PercentOutput, 0));
   }
 
   public Command armUpCommand() {
-    return run(
+    return startEnd(
         () -> {
           double armPercent = -ArmConstants.armPercent;
 
           m_armMotor.set(ControlMode.PercentOutput, armPercent);
-        });
-  }
-
-  public Command armStopCommand() {
-    return run(
-        () -> {
-          m_armMotor.set(ControlMode.PercentOutput, 0);
-        });
+        },
+        () -> m_armMotor.set(ControlMode.PercentOutput, 0));
   }
   /*public Command changeArmState() {
     return Commands.runOnce(() -> isStowed = !isStowed, this)

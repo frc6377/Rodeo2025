@@ -30,10 +30,10 @@ public final class Constants {
     public static final double kArmG = 0.3;
     public static final double kArmV = 4.06;
     public static final double kArmA = 0.01;
-    public static final double armPercent = .15;
+    public static final double armPercent = .225;
   }
 
   public static class intakeConstants {
-    public static final double intakePercent = .2;
+    public static final double intakePercent = .25;
   }
 }
