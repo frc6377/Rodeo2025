@@ -32,7 +32,7 @@ public final class Autos {
     return Commands.sequence(
             driveSubsystem.setForwardCommand(1.5, 0.5),
             Commands.waitSeconds(2),
-            driveSubsystem.setForwardCommand(0.6, 
+            driveSubsystem.setForwardCommand(0.6, -0.5))
         .withName("SmashAuto");
   }
 
