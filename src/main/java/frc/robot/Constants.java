@@ -27,7 +27,7 @@ public final class Constants {
 
     public static final double initalAngle = 0; // Initial angle of the arm
     public static final double scoreHighAngle = -10; // Angle to score high fix
-    public static final double scoreLowAngle = 45; // Angle to score low fix 
+    public static final double scoreLowAngle = 45; // Angle to score low fix
     public static final double pickUpBeakerAngle = 90; // Angle to intake fix
   }
 

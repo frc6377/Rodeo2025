@@ -64,30 +64,30 @@ public class Arm extends SubsystemBase {
     // Get the current angle of the pivotn in rotations
     return pivotEncoder.get();
   }
-  public Command toggleManualMode(){
+
+  public Command toggleManualMode() {
     return run(
-      () -> {
-        manualMode = !manualMode;
-        targetAngle = getCurrentAngle()*360;
-      }
-    );
+        () -> {
+          manualMode = !manualMode;
+          targetAngle = getCurrentAngle() * 360;
+        });
   }
+
   public Command changeTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
     return run(
         () -> {
           double angle =
               MathUtil.applyDeadband(
                       ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 10), 0.1)
-                  + (getCurrentAngle()*360);
-          goToAngle(angle,true); // degrees
-
+                  + (getCurrentAngle() * 360);
+          goToAngle(angle, true); // degrees
         });
   }
 
   public Command goToAngle(double angle, boolean manual) {
     return run(
         () -> {
-          if (manualMode=manual){
+          if (manualMode = manual) {
             targetAngle = Math.max(minAngle, Math.min(maxAngle, angle)); // degrees
           }
         });
@@ -103,14 +103,14 @@ public class Arm extends SubsystemBase {
   public Command scoreLowCommand() {
     return run(
         () -> {
-          goToAngle(PivotConstants.scoreLowAngle,false);
-       });
+          goToAngle(PivotConstants.scoreLowAngle, false);
+        });
   }
 
   public Command pickUpBeakerCommand() {
     return run(
         () -> {
-          goToAngle(PivotConstants.pickUpBeakerAngle,false);
+          goToAngle(PivotConstants.pickUpBeakerAngle, false);
         });
   }
 
