@@ -4,13 +4,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.intake.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,16 +23,35 @@ import frc.robot.subsystems.ExampleSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
+  private final Drivetrain m_DrivetrainSubsystem;
+  private final Arm m_ArmSubsystem;
+  private final Intake m_IntakeSubsystem;
+  private final ShuffleboardTab configTab = Shuffleboard.getTab("Config");
+  private final SendableChooser<Command> m_chooser;
   // Replace with CommandPS4Controller or CommandJoystick if needed
+
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
+    m_DrivetrainSubsystem = new Drivetrain();
+    m_ArmSubsystem = new Arm();
+    m_IntakeSubsystem = new Intake();
+
+    Command scoreHigh =
+        Autos.scoreHighAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    Command scoreLow =
+        Autos.scoreLowAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+    Command pickUpBeaker =
+        Autos.pickUpBeakerAutoCommand(m_DrivetrainSubsystem, m_ArmSubsystem, m_IntakeSubsystem);
+
+    m_chooser = new SendableChooser<>();
+    m_chooser.addOption("Score High", scoreHigh);
+    m_chooser.addOption("Score Low", scoreLow);
+    m_chooser.addOption("Pick Up Beaker", pickUpBeaker);
+    m_chooser.setDefaultOption("Score High", scoreHigh);
+    configTab.add("Autonomous Selection", m_chooser);
     configureBindings();
   }
 
@@ -42,13 +65,19 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.leftBumper().whileTrue(m_IntakeSubsystem.intakeBeaker());
+    m_driverController.rightBumper().whileTrue(m_IntakeSubsystem.outtakeBeaker());
+    m_driverController.y().whileTrue(m_ArmSubsystem.scoreHighCommand());
+    m_driverController.b().whileTrue(m_ArmSubsystem.scoreLowCommand());
+    m_driverController.a().whileTrue(m_ArmSubsystem.pickUpBeakerCommand());
+    // m_driverController.x().whileTrue(m_ArmSubsystem.toggleManualMode());
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    m_DrivetrainSubsystem.setDefaultCommand(
+        m_DrivetrainSubsystem.driveCommand(
+            m_driverController::getLeftY, m_driverController::getRightX));
+    m_ArmSubsystem.setDefaultCommand(
+        m_ArmSubsystem.changeTargetAngle(
+            m_driverController::getLeftTriggerAxis, m_driverController::getRightTriggerAxis));
   }
 
   /**
@@ -57,7 +86,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return m_chooser.getSelected();
   }
 }

@@ -2,27 +2,49 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.MotorIDs;
 
-public class ExampleSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
+public class Intake extends SubsystemBase {
+  private final TalonSRX intakeMotor;
+
+  public Intake() {
+    intakeMotor = new TalonSRX(MotorIDs.IntakeMotorID);
+  }
 
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
+  public Command intakeBeaker() {
+    return startEnd(
         () -> {
-          /* one-time action goes here */
+          intakeMotor.set(ControlMode.PercentOutput, 1);
+        },
+        () -> {
+          intakeMotor.set(ControlMode.PercentOutput, 0);
         });
+
+    // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
+
+  }
+
+  public Command outtakeBeaker() {
+    return startEnd(
+        () -> {
+          intakeMotor.set(ControlMode.PercentOutput, -1);
+        },
+        () -> {
+          intakeMotor.set(ControlMode.PercentOutput, 0);
+        });
+    // runEnd(() -> {}, ()->{}).andThen(new WaitCommand);
+
   }
 
   /**

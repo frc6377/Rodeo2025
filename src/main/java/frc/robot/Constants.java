@@ -16,4 +16,28 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class PivotConstants {
+    public static final int PivotMotorMin = -110;
+    public static final int PivotMotorMax = 90;
+
+    public static final double kP = 0.1; // Proportional gain fix
+    public static final double kI = 0.0; // Integral gain fix
+    public static final double kD = 0; // Derivative gain fix
+
+    public static final double initalAngle = 0; // Initial angle of the arm
+    public static final double scoreHighAngle = -10; // Angle to score high fix
+    public static final double scoreLowAngle = -60; // Angle to score low fix
+    public static final double pickUpBeakerAngle = -95; // Angle to intake fix
+  }
+
+  public static class MotorIDs {
+    public static final int leftDriveVictorID = 10;
+    public static final int leftDriveTalonID = 9;
+    public static final int rightDriveVictorID = 19;
+    public static final int rightDriveTalonID = 4;
+    public static final int pivotMotorMasterID = 7;
+    public static final int pivotMotorSlaveID = 5;
+    public static final int IntakeMotorID = 2;
+  }
 }

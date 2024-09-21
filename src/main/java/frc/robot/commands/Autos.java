@@ -6,12 +6,34 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.intake.Intake;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static Command exampleAuto(ExampleSubsystem subsystem) {
-    return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
+  public static Command scoreHighAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
+    return Commands.sequence(
+            arm.scoreLowCommand(),
+            drivetrain.goForwardCommand(1), // fix
+            Commands.waitSeconds(1),
+            intake.outtakeBeaker().withTimeout(1)) // fix
+        .withName("scoreHighAutoCommand");
+  }
+
+  public static Command scoreLowAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
+    return Commands.sequence(
+            drivetrain.goForwardCommand(1).withTimeout(0.5),
+            Commands.parallel(
+                drivetrain.goForwardCommand(0.5).withTimeout(0.25),
+                intake.outtakeBeaker().withTimeout(2)))
+        .withName("scoreLowAutoCommand");
+  }
+
+  public static Command pickUpBeakerAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
+    return Commands.sequence(
+            arm.pickUpBeakerCommand(), drivetrain.goForwardCommand(1.0), intake.intakeBeaker())
+        .withName("pickUpBeakerAutoCommand");
   }
 
   private Autos() {
