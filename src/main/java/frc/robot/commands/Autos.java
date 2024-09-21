@@ -30,9 +30,9 @@ public final class Autos {
 
   public static Command SmashAuto(DriveTrainSubsystem driveSubsystem) {
     return Commands.sequence(
-            driveSubsystem.setForwardCommand(1.5, -0.5),
+            driveSubsystem.setForwardCommand(1.5, 0.5),
             Commands.waitSeconds(2),
-            driveSubsystem.setForwardCommand(0.6, 0.5))
+            driveSubsystem.setForwardCommand(0.6, 
         .withName("SmashAuto");
   }
 
