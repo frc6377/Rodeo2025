@@ -112,7 +112,7 @@ public class ArmSubsystem extends SubsystemBase {
     if (Robot.isSimulation()) {
       return armSim.getAngleRads();
     } else {
-      return Units.rotationsToRadians(armEncoder.getAbsolutePosition());
+      return Units.rotationsToRadians(armEncoder.getAbsolutePosition()-armEncoder.getPositionOffset());
     }
   }
 
