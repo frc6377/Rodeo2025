@@ -19,9 +19,9 @@ import frc.robot.utilities.HowdyPID;
 public final class Constants {
   public static class MotorIDs {
     public static final int leftDriveMotor1 = 12;
-    public static final int leftDriveMotor2 = 10;
-    public static final int rightDriveMotor1 = 13;
-    public static final int rightDriveMotor2 = 11;
+    public static final int leftDriveMotor2 = 101; // 11
+    public static final int rightDriveMotor1 = 13; // 10
+    public static final int rightDriveMotor2 = 100; // 13
 
     public static final int Pigeon2ID = 5;
 
@@ -54,7 +54,7 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    public static final HowdyPID armPID = new HowdyPID(7.5, 0, 1);
+    public static final HowdyPID armPID = new HowdyPID(1, 0, 0);
 
     public static final double kS = 0;
     public static final double kG = 0.14; // 0.55
@@ -62,9 +62,9 @@ public final class Constants {
     public static final double kA = 0.01; // 0.05
 
     public static final double lowScorePose = Units.degreesToRadians(-45);
-    public static final double highScorePose = Units.degreesToRadians(25);
+    public static final double highScorePose = -0.303013;
 
-    public static final double offset = 0;
+    public static final double offset = 4.639464;
 
     // Simulation constants
     public static final DCMotor kArmMotor = DCMotor.getCIM(2);
@@ -85,7 +85,7 @@ public final class Constants {
 
   public static class EffectorConstants {
     public static final double intakePercent = 0.25;
-    public static final double outtakePercent = -0.25;
+    public static final double outtakePercent = -1;
 
     public static final boolean isBackUp = false;
     public static final HowdyPID wristPID = new HowdyPID(0.1, 0.0, 0.0);

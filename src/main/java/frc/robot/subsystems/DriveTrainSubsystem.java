@@ -29,10 +29,10 @@ import frc.robot.Robot;
 import java.util.function.DoubleSupplier;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-  private final TalonSRX leftDriveMotor1;
-  private final VictorSPX leftDriveMotor2;
-  private final VictorSPX rightDriveMotor1;
-  private final VictorSPX rightDriveMotor2;
+  private final VictorSPX leftDriveMotor1;
+  private final TalonSRX leftDriveMotor2;
+  private final TalonSRX rightDriveMotor1;
+  private final TalonSRX rightDriveMotor2;
 
   private final Pigeon2 drivePigeon2;
 
@@ -46,17 +46,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
-    leftDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
+    leftDriveMotor1 = new VictorSPX(MotorIDs.leftDriveMotor1);
+    leftDriveMotor1.setInverted(true);
 
-    leftDriveMotor2 = new VictorSPX(MotorIDs.leftDriveMotor2);
+    leftDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor2);
     leftDriveMotor2.follow(leftDriveMotor1);
 
-    rightDriveMotor1 = new VictorSPX(MotorIDs.rightDriveMotor1);
-    rightDriveMotor1.setInverted(true);
+    rightDriveMotor1 = new TalonSRX(MotorIDs.rightDriveMotor1);
 
-    rightDriveMotor2 = new VictorSPX(MotorIDs.rightDriveMotor2);
+    rightDriveMotor2 = new TalonSRX(MotorIDs.rightDriveMotor2);
     rightDriveMotor2.follow(rightDriveMotor1);
-    rightDriveMotor2.setInverted(true);
 
     drivePigeon2 = new Pigeon2(MotorIDs.Pigeon2ID);
     drivePigeon2.setYaw(0);

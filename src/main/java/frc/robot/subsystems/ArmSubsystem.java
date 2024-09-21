@@ -7,13 +7,11 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.motorcontrol.Victor;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
@@ -115,7 +113,8 @@ public class ArmSubsystem extends SubsystemBase {
     if (Robot.isSimulation()) {
       return armSim.getAngleRads();
     } else {
-      return Units.rotationsToRadians(armEncoder.getAbsolutePosition());
+      return Units.rotationsToRadians(
+          armEncoder.getAbsolutePosition() - armEncoder.getPositionOffset());
     }
   }
 
@@ -149,7 +148,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Motor 1 Output", armMotor1.getMotorOutputPercent());
     SmartDashboard.putNumber("Arm Motor 2 Output", armMotor2.getMotorOutputPercent());
 
-    SmartDashboard.putNumber("Arm Encoder Angle Deg", Units.radiansToDegrees(getArmPoseRads()));
+    SmartDashboard.putNumber("Arm Encoder Angle Deg", getArmPoseRads());
   }
 
   @Override

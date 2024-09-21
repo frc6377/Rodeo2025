@@ -91,8 +91,14 @@ public class RobotContainer {
       m_driverController.a().onTrue(m_ArmSubsystem.scoreLowCommand());
     }
 
-    m_driverController.leftTrigger().whileTrue(m_EffectorSubsystem.intakeCommand());
-    m_driverController.rightTrigger().whileTrue(m_EffectorSubsystem.outakeCommand());
+    m_driverController
+        .leftTrigger()
+        .whileTrue(m_EffectorSubsystem.intakeCommand())
+        .onFalse(m_EffectorSubsystem.stopCommand());
+    m_driverController
+        .rightTrigger()
+        .whileTrue(m_EffectorSubsystem.outakeCommand())
+        .onFalse(m_EffectorSubsystem.stopCommand());
   }
 
   /**
