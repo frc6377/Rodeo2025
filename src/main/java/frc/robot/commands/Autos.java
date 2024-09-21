@@ -17,4 +17,8 @@ public final class Autos {
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
+
+  private Command ForwardAuto(DriveTrainSubsystem m_driveTrainSubsystem ) {
+    return null;
+  }
 }
