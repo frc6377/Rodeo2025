@@ -99,16 +99,22 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public Command armUp() {
-    return run(
+    return startEnd(
         () -> {
           setArmMotors(0.5);
+        },
+        () -> {
+          setArmMotors(0);
         });
   }
 
   public Command armDown() {
-    return run(
+    return startEnd(
         () -> {
           setArmMotors(-0.5);
+        },
+        () -> {
+          setArmMotors(0);
         });
   }
 
