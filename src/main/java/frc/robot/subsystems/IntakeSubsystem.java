@@ -11,7 +11,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private final TalonSRX m_intakeMotor;
 
   public IntakeSubsystem() {
-    m_intakeMotor = new TalonSRX(6);
+    m_intakeMotor = new TalonSRX(5);
   }
 
   public Command intakeCommand(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {

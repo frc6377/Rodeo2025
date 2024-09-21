@@ -37,8 +37,8 @@ public class Drivetrain extends SubsystemBase {
         Commands.waitSeconds(sec),
         runEnd(
             () -> {
-              m_frontLeftMotor.set(ControlMode.PercentOutput, percent);
-              m_frontRightMotor.set(ControlMode.PercentOutput, percent);
+              m_frontLeftMotor.set(ControlMode.PercentOutput, -percent);
+              m_frontRightMotor.set(ControlMode.PercentOutput, -percent);
             },
             () -> {
               m_frontLeftMotor.set(ControlMode.PercentOutput, 0);
