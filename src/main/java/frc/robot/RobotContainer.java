@@ -67,9 +67,10 @@ public class RobotContainer {
   private void configureBindings() {
     m_driverController.leftBumper().whileTrue(m_IntakeSubsystem.intakeBeaker());
     m_driverController.rightBumper().whileTrue(m_IntakeSubsystem.outtakeBeaker());
-    m_driverController.y().whileTrue(m_ArmSubsystem.scoreHighCommand());
-    m_driverController.b().whileTrue(m_ArmSubsystem.scoreLowCommand());
-    m_driverController.a().whileTrue(m_ArmSubsystem.pickUpBeakerCommand());
+    m_driverController.y().onTrue(m_ArmSubsystem.scoreHighCommand());
+    m_driverController.b().onTrue(m_ArmSubsystem.scoreLowCommand());
+    m_driverController.a().onTrue(m_ArmSubsystem.pickUpBeakerCommand());
+    m_driverController.x().onTrue(m_ArmSubsystem.toggleManualMode());
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     m_DrivetrainSubsystem.setDefaultCommand(
         m_DrivetrainSubsystem.driveCommand(

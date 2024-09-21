@@ -25,7 +25,7 @@ public class Arm extends SubsystemBase {
   private final TalonSRX slavePivotMotor;
 
   private final DutyCycleEncoder pivotEncoder;
-
+  private boolean manualMode;
   private double targetAngle = PivotConstants.initalAngle;
   private final double minAngle = PivotConstants.PivotMotorMin;
   private final double maxAngle = PivotConstants.PivotMotorMax;
@@ -39,7 +39,7 @@ public class Arm extends SubsystemBase {
 
   public Arm() {
     pivotEncoder = new DutyCycleEncoder(0);
-
+    manualMode = false;
     masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorMasterID);
     masterPivotMotor.configFactoryDefault();
     masterPivotMotor.setNeutralMode(NeutralMode.Brake);
@@ -64,44 +64,53 @@ public class Arm extends SubsystemBase {
     // Get the current angle of the pivotn in rotations
     return pivotEncoder.get();
   }
-
+  public Command toggleManualMode(){
+    return run(
+      () -> {
+        manualMode = !manualMode;
+        targetAngle = getCurrentAngle()*360;
+      }
+    );
+  }
   public Command changeTargetAngle(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
-    goToAngle(0).schedule();
     return run(
         () -> {
           double angle =
               MathUtil.applyDeadband(
                       ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 10), 0.1)
-                  + targetAngle;
-          goToAngle(angle); // degrees
+                  + (getCurrentAngle()*360);
+          goToAngle(angle,true); // degrees
+
         });
   }
 
-  public Command goToAngle(double angle) {
+  public Command goToAngle(double angle, boolean manual) {
     return run(
         () -> {
-          targetAngle = Math.max(minAngle, Math.min(maxAngle, angle)); // degrees
+          if (manualMode=manual){
+            targetAngle = Math.max(minAngle, Math.min(maxAngle, angle)); // degrees
+          }
         });
   }
 
   public Command scoreHighCommand() {
     return run(
         () -> {
-          targetAngle = PivotConstants.scoreHighAngle;
+          goToAngle(PivotConstants.scoreHighAngle, false);
         });
   }
 
   public Command scoreLowCommand() {
     return run(
         () -> {
-          targetAngle = PivotConstants.scoreLowAngle;
-        });
+          goToAngle(PivotConstants.scoreLowAngle,false);
+       });
   }
 
   public Command pickUpBeakerCommand() {
     return run(
         () -> {
-          targetAngle = PivotConstants.pickUpBeakerAngle;
+          goToAngle(PivotConstants.pickUpBeakerAngle,false);
         });
   }
 
