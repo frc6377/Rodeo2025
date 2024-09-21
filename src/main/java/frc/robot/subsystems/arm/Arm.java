@@ -42,10 +42,10 @@ public class Arm extends SubsystemBase {
     manualMode = false;
     masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorMasterID);
     masterPivotMotor.configFactoryDefault();
-    masterPivotMotor.setNeutralMode(NeutralMode.Coast);
+    masterPivotMotor.setNeutralMode(NeutralMode.Brake);
     slavePivotMotor = new TalonSRX(MotorIDs.pivotMotorSlaveID);
     slavePivotMotor.configFactoryDefault();
-    slavePivotMotor.setNeutralMode(NeutralMode.Coast);
+    slavePivotMotor.setNeutralMode(NeutralMode.Brake);
     slavePivotMotor.setInverted(true);
     slavePivotMotor.follow(masterPivotMotor);
 
@@ -81,7 +81,7 @@ public class Arm extends SubsystemBase {
         () -> {
           double angle =
               MathUtil.applyDeadband(
-                      ((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 10), 0.1)
+                      ((leftTrigger.getAsDouble() - rightTrigger.getAsDouble()) * 10), 0.1)
                   + (getCurrentAngle() * 360);
           goToAngle(angle, true); // degrees
         });

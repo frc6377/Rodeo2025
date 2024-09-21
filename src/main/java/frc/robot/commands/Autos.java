@@ -14,7 +14,8 @@ public final class Autos {
   /** Example static factory for an autonomous command. */
   public static Command scoreHighAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
     return Commands.sequence(
-            drivetrain.goForwardCommand(1, 2), // fix
+            arm.scoreLowCommand(),
+            drivetrain.goForwardCommand(1), // fix
             Commands.waitSeconds(1),
             intake.outtakeBeaker().withTimeout(1)) // fix
         .withName("scoreHighAutoCommand");
@@ -22,13 +23,16 @@ public final class Autos {
 
   public static Command scoreLowAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
     return Commands.sequence(
-            arm.scoreLowCommand(), drivetrain.goForwardCommand(1, 2), intake.outtakeBeaker())
+            drivetrain.goForwardCommand(1).withTimeout(0.5),
+            Commands.parallel(
+                drivetrain.goForwardCommand(0.5).withTimeout(0.25),
+                intake.outtakeBeaker().withTimeout(2)))
         .withName("scoreLowAutoCommand");
   }
 
   public static Command pickUpBeakerAutoCommand(Drivetrain drivetrain, Arm arm, Intake intake) {
     return Commands.sequence(
-            arm.pickUpBeakerCommand(), drivetrain.goForwardCommand(1, 2), intake.intakeBeaker())
+            arm.pickUpBeakerCommand(), drivetrain.goForwardCommand(1.0), intake.intakeBeaker())
         .withName("pickUpBeakerAutoCommand");
   }
 

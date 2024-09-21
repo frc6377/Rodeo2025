@@ -51,18 +51,16 @@ public class Drivetrain extends SubsystemBase {
         });
   }
   // Auton command to drive forward for a certain amount of time
-  public Command goForwardCommand(double speed, double seconds) {
-    return Commands.deadline(
-        Commands.waitSeconds(seconds),
-        runEnd(
-            () -> {
-              leftDriveTalon.set(ControlMode.PercentOutput, speed);
-              rightDriveTalon.set(ControlMode.PercentOutput, speed);
-            },
-            () -> {
-              leftDriveTalon.set(ControlMode.PercentOutput, 0);
-              rightDriveTalon.set(ControlMode.PercentOutput, 0);
-            }));
+  public Command goForwardCommand(double speed) {
+    return runEnd(
+        () -> {
+          leftDriveTalon.set(ControlMode.PercentOutput, speed);
+          rightDriveTalon.set(ControlMode.PercentOutput, speed);
+        },
+        () -> {
+          leftDriveTalon.set(ControlMode.PercentOutput, 0);
+          rightDriveTalon.set(ControlMode.PercentOutput, 0);
+        });
   }
 
   public Command turnCommand(double axis, double seconds) {
