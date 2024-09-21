@@ -2,6 +2,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
@@ -59,8 +63,10 @@ public class ArmSubsystem extends SubsystemBase {
                 this::getArmAngle,
                 () -> {
                   if (!isStowed) {
+                    SmartDashboard.putNumber("armSetPoint", ArmConstants.scoreAngle);
                     return ArmConstants.scoreAngle;
                   } else {
+                    SmartDashboard.putNumber("armSetPoint", ArmConstants.stowedAngle);
                     return ArmConstants.stowedAngle;
                   }
                 },
