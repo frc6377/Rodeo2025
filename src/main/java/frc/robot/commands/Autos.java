@@ -17,7 +17,7 @@ public final class Autos {
       ArmSubsystem armSubsystem,
       EffectorSubsystem effectorSubsystem) {
     return Commands.sequence(
-            driveSubsystem.setForwardCommand(0.8, -0.5),
+            driveSubsystem.setForwardCommand(0.9, -0.45),
             // armSubsystem.scoreHighCommand(),
             // effectorSubsystem.outakeCommand(),
             Commands.waitSeconds(2),

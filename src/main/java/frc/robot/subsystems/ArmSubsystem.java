@@ -98,6 +98,27 @@ public class ArmSubsystem extends SubsystemBase {
     }
   }
 
+  public Command armUp() {
+    return run(
+        () -> {
+          setArmMotors(0.5);
+        });
+  }
+
+  public Command armDown() {
+    return run(
+        () -> {
+          setArmMotors(-0.5);
+        });
+  }
+
+  public Command stopArm() {
+    return run(
+        () -> {
+          setArmMotors(0);
+        });
+  }
+
   public void setArmMotors(double output) {
     armMotor1.set(ControlMode.PercentOutput, output);
   }
@@ -113,7 +134,7 @@ public class ArmSubsystem extends SubsystemBase {
       return armSim.getAngleRads();
     } else {
       return Units.rotationsToRadians(
-          armEncoder.getAbsolutePosition() - armEncoder.getPositionOffset());
+          armEncoder.getAbsolutePosition() /* - Units.radiansToRotations(ArmConstants.offset) */);
     }
   }
 
@@ -147,7 +168,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Motor 1 Output", armMotor1.getMotorOutputPercent());
     SmartDashboard.putNumber("Arm Motor 2 Output", armMotor2.getMotorOutputPercent());
 
-    SmartDashboard.putNumber("Arm Encoder Angle Deg", Units.radiansToDegrees(getArmPoseRads()));
+    SmartDashboard.putNumber("Arm Encoder Angle Deg", getArmPoseRads());
   }
 
   @Override

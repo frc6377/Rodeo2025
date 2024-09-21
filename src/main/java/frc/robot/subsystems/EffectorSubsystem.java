@@ -16,7 +16,6 @@ import frc.robot.Constants.MotorIDs;
 
 public class EffectorSubsystem extends SubsystemBase {
   private final TalonSRX effectorMotor1;
-  private final TalonSRX effectorMotor2;
 
   private TalonSRX wristMotor;
   private CANcoder wristEncoder;
@@ -25,15 +24,6 @@ public class EffectorSubsystem extends SubsystemBase {
   /** Creates a new EffectorSubsystem. */
   public EffectorSubsystem() {
     effectorMotor1 = new TalonSRX(MotorIDs.effectorMotor1);
-    effectorMotor2 = new TalonSRX(MotorIDs.effectorMotor2);
-
-    if (EffectorConstants.isBackUp) {
-      wristMotor = new TalonSRX(MotorIDs.wristMotor);
-
-      wristPID = EffectorConstants.wristPID.getPIDController();
-      wristEncoder = new CANcoder(MotorIDs.wristEncoder);
-      EffectorConstants.wristPID.createTunableNumbers("Wrist PID", wristPID, this);
-    }
   }
 
   // Commands
@@ -56,18 +46,22 @@ public class EffectorSubsystem extends SubsystemBase {
   }
 
   public Command intakeCommand() {
-    return run(
+    return startEnd(
         () -> {
           effectorMotor1.set(ControlMode.PercentOutput, EffectorConstants.intakePercent);
-          effectorMotor2.set(ControlMode.PercentOutput, EffectorConstants.intakePercent);
+        },
+        () -> {
+          effectorMotor1.set(ControlMode.PercentOutput, 0);
         });
   }
 
   public Command outakeCommand() {
-    return run(
+    return startEnd(
         () -> {
           effectorMotor1.set(ControlMode.PercentOutput, EffectorConstants.outtakePercent);
-          effectorMotor2.set(ControlMode.PercentOutput, EffectorConstants.outtakePercent);
+        },
+        () -> {
+          effectorMotor1.set(ControlMode.PercentOutput, 0);
         });
   }
 
@@ -75,7 +69,6 @@ public class EffectorSubsystem extends SubsystemBase {
     return run(
         () -> {
           effectorMotor1.set(ControlMode.PercentOutput, 0.0);
-          effectorMotor2.set(ControlMode.PercentOutput, 0.0);
         });
   }
 

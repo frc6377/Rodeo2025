@@ -25,15 +25,10 @@ public final class Constants {
 
     public static final int Pigeon2ID = 5;
 
-    public static final int armMotor1 = 6;
-    public static final int armMotor2 = 7;
+    public static final int armMotor1 = 7;
+    public static final int armMotor2 = 10;
 
-    public static final int effectorMotor1 = 9;
-    public static final int effectorMotor2 = 10;
-
-    public static final int wristMotor = 11;
-    public static final int wristEncoder = 12;
-
+    public static final int effectorMotor1 = 11;
     // not CAN bus
     public static final int armEncoder = 9;
   }
@@ -61,10 +56,10 @@ public final class Constants {
     public static final double kV = 2.15;
     public static final double kA = 0.01; // 0.05
 
-    public static final double lowScorePose = Units.degreesToRadians(-45);
+    public static final double lowScorePose = 2.863492;
     public static final double highScorePose = Units.degreesToRadians(25);
 
-    public static final double offset = 0;
+    public static final double offset = 2.789822;
 
     // Simulation constants
     public static final DCMotor kArmMotor = DCMotor.getCIM(2);
