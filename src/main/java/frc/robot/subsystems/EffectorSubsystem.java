@@ -26,6 +26,8 @@ public class EffectorSubsystem extends SubsystemBase {
   public EffectorSubsystem() {
     effectorMotor1 = new TalonSRX(MotorIDs.effectorMotor1);
     effectorMotor2 = new TalonSRX(MotorIDs.effectorMotor2);
+    effectorMotor2.setInverted(true);
+    effectorMotor2.follow(effectorMotor1);
 
     if (EffectorConstants.isBackUp) {
       wristMotor = new TalonSRX(MotorIDs.wristMotor);

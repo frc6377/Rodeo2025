@@ -6,11 +6,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.motorcontrol.Victor;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
@@ -29,7 +32,7 @@ import frc.robot.Constants.MotorIDs;
 import frc.robot.Robot;
 
 public class ArmSubsystem extends SubsystemBase {
-  private final TalonSRX armMotor1;
+  private final VictorSPX armMotor1;
   private final TalonSRX armMotor2;
 
   private final DutyCycleEncoder armEncoder;
@@ -49,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
-    armMotor1 = new TalonSRX(MotorIDs.armMotor1);
+    armMotor1 = new VictorSPX(MotorIDs.armMotor1);
     armMotor2 = new TalonSRX(MotorIDs.armMotor2);
     armMotor1.setInverted(true);
     armMotor2.follow(armMotor1);

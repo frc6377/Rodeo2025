@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.controller.PIDController;
@@ -28,7 +29,7 @@ import frc.robot.Robot;
 import java.util.function.DoubleSupplier;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-  private final VictorSPX leftDriveMotor1;
+  private final TalonSRX leftDriveMotor1;
   private final VictorSPX leftDriveMotor2;
   private final VictorSPX rightDriveMotor1;
   private final VictorSPX rightDriveMotor2;
@@ -45,7 +46,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
-    leftDriveMotor1 = new VictorSPX(MotorIDs.leftDriveMotor1);
+    leftDriveMotor1 = new TalonSRX(MotorIDs.leftDriveMotor1);
 
     leftDriveMotor2 = new VictorSPX(MotorIDs.leftDriveMotor2);
     leftDriveMotor2.follow(leftDriveMotor1);
