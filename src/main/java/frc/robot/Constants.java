@@ -28,7 +28,7 @@ public final class Constants {
     public static final int armMotor1 = 3;
     public static final int armMotor2 = 15;
 
-    public static final int effectorMotor1 = 4;
+    public static final int effectorMotor1 = 9;
     public static final int effectorMotor2 = 4;
 
     public static final int wristMotor = 11;
