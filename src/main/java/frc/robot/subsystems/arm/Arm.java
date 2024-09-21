@@ -42,10 +42,10 @@ public class Arm extends SubsystemBase {
     manualMode = false;
     masterPivotMotor = new TalonSRX(MotorIDs.pivotMotorMasterID);
     masterPivotMotor.configFactoryDefault();
-    masterPivotMotor.setNeutralMode(NeutralMode.Brake);
+    masterPivotMotor.setNeutralMode(NeutralMode.Coast);
     slavePivotMotor = new TalonSRX(MotorIDs.pivotMotorSlaveID);
     slavePivotMotor.configFactoryDefault();
-    slavePivotMotor.setNeutralMode(NeutralMode.Brake);
+    slavePivotMotor.setNeutralMode(NeutralMode.Coast);
     slavePivotMotor.setInverted(true);
     slavePivotMotor.follow(masterPivotMotor);
 
@@ -54,6 +54,9 @@ public class Arm extends SubsystemBase {
     m_kP = new DebugEntry<>(PivotConstants.kP, "kP", this);
     m_kI = new DebugEntry<>(PivotConstants.kI, "kI", this);
     m_kD = new DebugEntry<>(PivotConstants.kD, "kD", this);
+    m_kP.log(pidController.getP());
+    m_kI.log(pidController.getI());
+    m_kD.log(pidController.getD());
   }
   /**
    * Gets the current angle of the arm
@@ -66,10 +69,10 @@ public class Arm extends SubsystemBase {
   }
 
   public Command toggleManualMode() {
-    return run(
+    return runOnce(
         () -> {
           manualMode = !manualMode;
-          targetAngle = getCurrentAngle() * 360;
+          // targetAngle = getCurrentAngle() * 360;
         });
   }
 
@@ -84,13 +87,10 @@ public class Arm extends SubsystemBase {
         });
   }
 
-  public Command goToAngle(double angle, boolean manual) {
-    return run(
-        () -> {
-          if (manualMode = manual) {
-            targetAngle = Math.max(minAngle, Math.min(maxAngle, angle)); // degrees
-          }
-        });
+  public void goToAngle(double angle, boolean manual) {
+    if (true) {
+      targetAngle = Math.max(minAngle, Math.min(maxAngle, angle)); // degrees
+    }
   }
 
   public Command scoreHighCommand() {
@@ -132,9 +132,6 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     update();
-    m_kP.log(pidController.getP());
-    m_kI.log(pidController.getI());
-    m_kD.log(pidController.getD());
 
     pidController.setP(m_kP.get());
     pidController.setI(m_kI.get());
@@ -142,5 +139,6 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Current Angle", (getCurrentAngle() * 360));
     SmartDashboard.putNumber("Target Angle", targetAngle);
     SmartDashboard.putBoolean("Arm at taget angle", getCurrentAngle() == targetAngle);
+    SmartDashboard.putBoolean("Manual Mode", manualMode);
   }
 }

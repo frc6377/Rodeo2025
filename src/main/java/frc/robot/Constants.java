@@ -23,7 +23,7 @@ public final class Constants {
 
     public static final double kP = 0.1; // Proportional gain fix
     public static final double kI = 0.0; // Integral gain fix
-    public static final double kD = 0.0; // Derivative gain fix
+    public static final double kD = 0; // Derivative gain fix
 
     public static final double initalAngle = 0; // Initial angle of the arm
     public static final double scoreHighAngle = -10; // Angle to score high fix
