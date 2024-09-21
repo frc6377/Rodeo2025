@@ -18,18 +18,18 @@ import frc.robot.utilities.HowdyPID;
  */
 public final class Constants {
   public static class MotorIDs {
-    public static final int leftDriveMotor1 = 2;
-    public static final int leftDriveMotor2 = 1;
-    public static final int rightDriveMotor1 = 4;
-    public static final int rightDriveMotor2 = 3;
+    public static final int leftDriveMotor1 = 12;
+    public static final int leftDriveMotor2 = 10;
+    public static final int rightDriveMotor1 = 13;
+    public static final int rightDriveMotor2 = 11;
 
     public static final int Pigeon2ID = 5;
 
-    public static final int armMotor1 = 6;
-    public static final int armMotor2 = 7;
+    public static final int armMotor1 = 3;
+    public static final int armMotor2 = 15;
 
-    public static final int effectorMotor1 = 9;
-    public static final int effectorMotor2 = 10;
+    public static final int effectorMotor1 = 4;
+    public static final int effectorMotor2 = 4;
 
     public static final int wristMotor = 11;
     public static final int wristEncoder = 12;
