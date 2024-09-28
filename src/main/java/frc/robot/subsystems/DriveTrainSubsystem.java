@@ -111,10 +111,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         () -> {
           double leftPercent =
               (forwardAxis.getAsDouble() * DriveTrainConstants.maxDrivePercent)
-                  + (turnAxis.getAsDouble() * DriveTrainConstants.maxTurnPercent);
+                  + (-turnAxis.getAsDouble() * DriveTrainConstants.maxTurnPercent);
           double rightPercent =
               (forwardAxis.getAsDouble() * DriveTrainConstants.maxDrivePercent)
-                  + (-turnAxis.getAsDouble() * DriveTrainConstants.maxDrivePercent);
+                  + (turnAxis.getAsDouble() * DriveTrainConstants.maxDrivePercent);
 
           leftDriveMotor1.set(ControlMode.PercentOutput, leftPercent);
           rightDriveMotor1.set(ControlMode.PercentOutput, rightPercent);
