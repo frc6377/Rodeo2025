@@ -25,8 +25,8 @@ public final class Constants {
 
     public static final int Pigeon2ID = 5;
 
-    public static final int armMotor1 = 7;
-    public static final int armMotor2 = 10;
+    public static final int armMotor1 = 10;
+    public static final int armMotor2 = 100;
 
     public static final int effectorMotor1 = 11;
     // not CAN bus
