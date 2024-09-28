@@ -19,9 +19,9 @@ import frc.robot.utilities.HowdyPID;
 public final class Constants {
   public static class MotorIDs {
     public static final int leftDriveMotor1 = 12;
-    public static final int leftDriveMotor2 = 101; // 11
+    public static final int leftDriveMotor2 = 10; // 11
     public static final int rightDriveMotor1 = 13; // 10
-    public static final int rightDriveMotor2 = 100; // 13
+    public static final int rightDriveMotor2 = 11; // 13
 
     public static final int Pigeon2ID = 5;
 

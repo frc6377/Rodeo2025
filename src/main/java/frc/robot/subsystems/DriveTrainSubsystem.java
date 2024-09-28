@@ -51,6 +51,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     leftDriveMotor2 = new TalonSRX(MotorIDs.leftDriveMotor2);
     leftDriveMotor2.follow(leftDriveMotor1);
+    leftDriveMotor2.setInverted(true);
 
     rightDriveMotor1 = new TalonSRX(MotorIDs.rightDriveMotor1);
 
