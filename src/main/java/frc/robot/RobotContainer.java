@@ -87,8 +87,8 @@ public class RobotContainer {
       m_driverController.button(1).onTrue(m_ArmSubsystem.scoreHighCommand());
       m_driverController.button(2).onTrue(m_ArmSubsystem.scoreLowCommand());
     } else {
-      m_driverController.x().onTrue(m_ArmSubsystem.scoreHighCommand());
-      m_driverController.a().onTrue(m_ArmSubsystem.scoreLowCommand());
+      m_driverController.x().whileTrue(m_ArmSubsystem.armUpCommand());
+      m_driverController.a().whileTrue(m_ArmSubsystem.armDownCommand());
     }
 
     m_driverController

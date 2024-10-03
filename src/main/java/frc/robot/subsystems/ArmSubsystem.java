@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -34,7 +33,6 @@ public class ArmSubsystem extends SubsystemBase {
   private final TalonSRX armMotor2;
 
   private final DutyCycleEncoder armEncoder;
-  private final DutyCycleEncoderSim armEncoderSim;
 
   private final PIDController armPIDController;
   private final ArmFeedforward armFeedforward;
@@ -57,7 +55,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     armEncoder = new DutyCycleEncoder(MotorIDs.armEncoder);
     armEncoder.setPositionOffset(ArmConstants.offset);
-    armEncoderSim = new DutyCycleEncoderSim(armEncoder);
 
     armPIDController = ArmConstants.armPID.getPIDController();
     ArmConstants.armPID.createTunableNumbers("Arm PID", armPIDController, this);
@@ -141,6 +138,26 @@ public class ArmSubsystem extends SubsystemBase {
 
   public Command scoreHighCommand() {
     return setArmPosition(ArmConstants.highScorePose);
+  }
+
+  public Command armUpCommand() {
+    return runEnd(
+        () -> {
+          setArmMotors(0.5);
+        },
+        () -> {
+          setArmMotors(0);
+        });
+  }
+
+  public Command armDownCommand() {
+    return runEnd(
+        () -> {
+          setArmMotors(-0.5);
+        },
+        () -> {
+          setArmMotors(0);
+        });
   }
 
   @Override
