@@ -11,7 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 public final class Autos {
   /** Example static factory for an autonomous command. */
   public static Command Forward(Drivetrain drivetrain) {
-    return Commands.sequence(drivetrain.Forward(.5, .5));
+    return Commands.sequence(drivetrain.Forward(1.25, .5));
   }
 
   private Autos() {

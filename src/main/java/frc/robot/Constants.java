@@ -18,7 +18,7 @@ public final class Constants {
   }
 
   public static class DrivetrainConstants {
-    public static final double maxDrivePercent = 0.65;
+    public static final double maxDrivePercent = 0.525;
   }
 
   public static class ArmConstants {
@@ -34,6 +34,6 @@ public final class Constants {
   }
 
   public static class intakeConstants {
-    public static final double intakePercent = .25;
+    public static final double intakePercent = .225;
   }
 }
